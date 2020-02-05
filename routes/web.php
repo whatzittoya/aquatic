@@ -1,0 +1,45 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+})->name('welcome');
+
+Route::get('/test', function () {
+    phpinfo();
+})->where('any', '.*');
+
+
+Auth::routes();
+Route::resource('register', 'RegistrationController')->names([
+    'index' => 'register'
+]);
+Route::get('email/{id}', 'RegistrationController@email')->name('events');
+
+Route::middleware('auth')->prefix('admin')->group(function () {
+    Route::get('/home', function () {
+        return view('home');
+    })->name('home');
+    Route::get('events', 'EventController@index')->name('events');
+    Route::resource('members', 'MemberController')->names([
+        'index' => 'members'
+    ]);
+    Route::resource('clubs', 'ClubController')->names([
+        'index' => 'clubs'
+    ]);
+});
+
+Route::get('/{url}', function ($url) {
+
+    return view('other/under_construction');
+})->where('url', '(about|events|contact)'); // the pipe denotes 'or'
