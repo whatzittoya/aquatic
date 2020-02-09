@@ -65,6 +65,9 @@ return [
             'retry_after' => 90,
             'block_for' => null,
         ],
+        'failed' => [
+            'database' => 'mysql', 'table' => 'failed_jobs',
+        ],
 
     ],
 

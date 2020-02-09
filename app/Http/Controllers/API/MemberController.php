@@ -22,7 +22,7 @@ class MemberController extends Controller
     {
         $member = Member::select('id', 'name', 'born_date', 'best_time', 'club_id', 'filename', 'valid')->with('clubs:id,name')->get();
 
-        return response()->json($member);
+        return response()->json($member)->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 
     /**

@@ -20,12 +20,22 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
+                @guest
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('login')}}">Login</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ route('register')}}">Register</a>
                 </li>
+                @endguest
+                @auth
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ route('members')}}">Dashboard</a>
+                </li>
+
+                @endauth
+                <!-- note the end auth -->
+
             </ul>
         </div>
     </div>

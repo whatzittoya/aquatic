@@ -18,8 +18,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:api')->group(function () {
+
+    Route::post('members/updateapi/{id}', 'API\MemberController@updateApi')->name('events');
+    Route::apiResource('members', 'API\MemberController');
+    Route::apiResource('clubs', 'API\ClubController');
     Route::apiResource('events', 'API\EventController');
+    Route::apiResource('rules', 'API\RuleController');
 });
-Route::post('members/updateapi/{id}', 'API\MemberController@updateApi')->name('events');
-Route::apiResource('members', 'API\MemberController');
-Route::apiResource('clubs', 'API\ClubController');
+
+// Route::get('test/{user}', function (App\User $user) {
+
+//     dd($user->roles->hasAccess('manage-club'));
+// });

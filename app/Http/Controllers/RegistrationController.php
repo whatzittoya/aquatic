@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Member;
 use App\User;
+use App\ErrorLog;
 use App\Club;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserRegistered;
+use Exception;
+use Illuminate\Mail\Message;
 
 class RegistrationController extends Controller
 {
@@ -44,12 +48,61 @@ class RegistrationController extends Controller
     {
         //// validate
         // read more on validation at http://laravel.com/docs/validation
+        // $rules = array(
+        //     'klub'       => 'required',
+        //     'nama'       => 'required',
+        //     'tanggal_lahir'       => 'required',
+        //     'email'       => 'required|email|unique:users',
+        //     'dokumen'       => 'required|max:500|mimes:pdf,png,jpg,jpeg',
+
+        // );
+        // $validator = Validator::make($request->all(), $rules);
+
+        // // process the login
+        // if ($validator->fails()) {
+        //     return redirect()->route('register')
+        //         ->withErrors($validator)
+        //         ->withInput();
+        // } else {
+        //     //blob
+        //     $file = $request->file('dokumen');
+
+        //     $path = Storage::putFile(
+        //         'documents',
+        //         $request->file('dokumen')
+        //     );
+
+
+        //     $user = new User;
+        //     $user->email = $request->email;
+        //     $user->name = $request->nama;
+        //     $user->save();
+
+        //     $member = new Member;
+        //     $member->name       = $request->nama;
+        //     $member->club_id       = $request->klub;
+        //     $member->born_date       = $request->tanggal_lahir;
+        //     $member->best_time       = 3599999;
+        //     $member->valid       = 0;
+        //     $member->filename       = $file->getClientOriginalName();
+        //     $member->path = $path;
+        //     $member->extension       = $file->getClientOriginalExtension();
+        //     $member->file_type       = $file->getMimeType();
+        //     $member->user_id       = $user->id;
+        //     $member->save();
+
+
+        //     return redirect()->route('register')->with('message', 'Pendaftaran Berhasil');;
+        // }
+
         $rules = array(
-            'klub'       => 'required',
             'nama'       => 'required',
-            'tanggal_lahir'       => 'required',
+            'alamat'       => 'required',
+            'kota'       => 'required',
+            'provinsi'       => 'required',
+            'pic'       => 'required',
             'email'       => 'required|email|unique:users',
-            'dokumen'       => 'required|max:500|mimes:pdf,png,jpg,jpeg',
+
 
         );
         $validator = Validator::make($request->all(), $rules);
@@ -61,12 +114,7 @@ class RegistrationController extends Controller
                 ->withInput();
         } else {
             //blob
-            $file = $request->file('dokumen');
 
-            $path = Storage::putFile(
-                'documents',
-                $request->file('dokumen')
-            );
 
 
             $user = new User;
@@ -74,18 +122,29 @@ class RegistrationController extends Controller
             $user->name = $request->nama;
             $user->save();
 
-            $member = new Member;
-            $member->name       = $request->nama;
-            $member->club_id       = $request->klub;
-            $member->born_date       = $request->tanggal_lahir;
-            $member->best_time       = 3599999;
-            $member->valid       = 0;
-            $member->filename       = $file->getClientOriginalName();
-            $member->path = $path;
-            $member->extension       = $file->getClientOriginalExtension();
-            $member->file_type       = $file->getMimeType();
-            $member->user_id       = $user->id;
-            $member->save();
+            $club = new Club;
+            $club->name       = $request->nama;
+            $club->address       = $request->alamat;
+            $club->city       = $request->kota;
+            $club->province       = $request->provinsi;
+            $club->pic       = $request->pic;
+            $club->valid       = 0;
+
+            $club->user_id       = $user->id;
+            $club->save();
+            $objUser = new \stdClass();
+            try {
+                Mail::to($user->email)->send(new UserRegistered($objUser));
+            } catch (Exception $ex) {
+
+                $error = new ErrorLog;
+                $error->name = "Mail registration";
+                $error->type = "Sending Mail";
+                $error->exception = $ex->getMessage();
+                $error->table = 'user';
+                $error->value = json_encode($user);
+                $error->save();
+            }
 
 
             return redirect()->route('register')->with('message', 'Pendaftaran Berhasil');;

@@ -29,10 +29,16 @@ class AuthServiceProvider extends ServiceProvider
             $router->forAccessTokens();
         });
 
-        // Gate::define('manage-blog', function ($user) {
-        //     return $user->id == 1;
-        // });
-        //
+        Gate::define('admin', function ($user) {
+            return $user->isAdmin();
+        });
+        Gate::define('club', function ($user) {
+            return $user->isClub();
+        });
+        Gate::define('manage-member', function ($user) {
+            return true;
+        });
+
         $this->publishes([
             __DIR__ . '/../../vendor/almasaeed2010/adminlte/plugins' => public_path('vendor/adminlte'),
         ], 'public');

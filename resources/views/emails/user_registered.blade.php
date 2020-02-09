@@ -229,21 +229,13 @@
                                 <!-- Body content -->
                                 <tr>
                                     <td class="content-cell">
-                                        <h1>Club telah berhasil divalidasi</h1>
-                                        <p>Terima kasih telah mendaftar di Website Riau Aquatic! Data Anda sudah kami
-                                            terima dan sudah kami validasi</p>
-                                        <p>Berikut adalah akun anda untuk login di website kami. </p>
+                                        <h1>Club telah berhasil terdaftar</h1>
+                                        <p>Terima kasih telah mendaftar di Website Riau Aquatic! Mohon menunggu, kami akan memvalidasi data anda.</p>
+                                       
                                         <!-- Action -->
                                         <table class="body-action" align="center" width="100%" cellpadding="0"
                                             cellspacing="0">
-                                            <tr>
-                                                <td>
-                                                    <p style="text-align: center; color: #292E31;">
-                                                        <strong> Username: {{$user->username}}<br>
-                                                    Password:{{$user->password}}</strong>
-                                                    </p>
-                                                </td>
-                                            </tr>
+                                           
                                             <tr>
                                                 <td align="center">
                                                     <div>

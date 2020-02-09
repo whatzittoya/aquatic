@@ -16,10 +16,10 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/test', function () {
-    phpinfo();
+    return view('test');
 })->where('any', '.*');
 
-
+Route::get('stest/{msg}', 'RuleController@test');
 Auth::routes();
 Route::resource('register', 'RegistrationController')->names([
     'index' => 'register'
@@ -31,12 +31,14 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         return view('home');
     })->name('home');
     Route::get('events', 'EventController@index')->name('events');
+    Route::get('rules', 'RuleController@index')->name('rules');
     Route::resource('members', 'MemberController')->names([
         'index' => 'members'
     ]);
     Route::resource('clubs', 'ClubController')->names([
         'index' => 'clubs'
     ]);
+    Route::resource('/passwords/change', 'ChangePassController')->names(['index' => 'change_pass']);
 });
 
 Route::get('/{url}', function ($url) {

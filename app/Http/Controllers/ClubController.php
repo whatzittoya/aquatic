@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Club;
 use Illuminate\Http\Request;
+use Validator;
+use App\User;
 
 class ClubController extends Controller
 {
@@ -35,7 +37,6 @@ class ClubController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**

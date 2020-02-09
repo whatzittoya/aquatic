@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
-use App\Event;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Events\MyEvent;
+use App\Rule;
 
-class EventController extends Controller
+class RuleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::get();
-
-        return response()->json($events);
+        //
+        return view('admin.rules');
     }
 
     /**
@@ -28,20 +27,21 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $event = new Event;
-        $event->name = $request->name;
-        $event->start_date = $request->start_date;
-        $event->end_date = $request->end_date;
-        $event->save();
+        //
     }
-
+    public function test($msg)
+    {
+        $rule = Rule::get();
+        broadcast(new MyEvent($rule));
+        return response()->json($rule);
+    }
     /**
      * Display the specified resource.
      *
-     * @param  \App\Event  $event
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Event $event)
+    public function show($id)
     {
         //
     }
@@ -50,31 +50,22 @@ class EventController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Event  $event
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         //
-        $data = $request->data;
-
-        $event = Event::find($id);
-        $event->name = $data['name'];
-        $event->start_date = $data['start_date'];
-        $event->end_date = $data['end_date'];
-        $event->update();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Event  $event
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $event = Event::find($id);
-        $event->delete();
-        return 204;
+        //
     }
 }

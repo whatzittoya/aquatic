@@ -8,18 +8,19 @@
     <div class="row">
 
       <div class="col-md-12">
-        <!-- <div class="col-md-4">
-         
-             <button id="show-modal" @click="createData()" class="btn btn-primary">Tambah Member</button>
-           
-          </div>    -->
-        <v-data-table :headers="headers" :items="members" :items-per-page="10" class="elevation-1">
+       <v-card-title>
+                    Event
+                    <v-spacer></v-spacer>
+                </v-card-title>
+        <v-data-table :headers="headers" :items="members" :items-per-page="10" class="elevation-1" :search="search">
           <template v-slot:item.valid="{ item }">
             {{item.valid ? "Valid":"Tidak Valid"}}
           </template>
           <template v-slot:top>
             <v-toolbar flat color="white">
-              <v-toolbar-title>Member</v-toolbar-title>
+              <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details>
+                            </v-text-field>
+
               <v-divider class="mx-4" inset vertical></v-divider>
               <v-spacer></v-spacer>
               <v-dialog v-model="dialog" max-width="500px">
@@ -195,6 +196,7 @@ export default {
       members: [],
       file_error_messages: null,
       edit: false,
+      search: "",
       id: 0,
       showModal: false,
       dialog: false,
@@ -256,7 +258,7 @@ export default {
 
       Object.keys(this.formtest).forEach(f => {
         if (!this.formtest[f]) this.formHasErrors = true;
-        console.log(this.formtest[f]);
+
         this.$refs[f].validate(true);
       });
       if (!this.formHasErrors && this.file_error_messages == null) {

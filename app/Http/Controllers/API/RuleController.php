@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Event;
 use App\Http\Controllers\Controller;
+use App\Rule;
 use Illuminate\Http\Request;
 
-class EventController extends Controller
+class RuleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,9 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::get();
+        $rules = Rule::get();
 
-        return response()->json($events);
+        return response()->json($rules);
     }
 
     /**
@@ -28,29 +28,30 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $event = new Event;
-        $event->name = $request->name;
-        $event->start_date = $request->start_date;
-        $event->end_date = $request->end_date;
-        $event->save();
+        $rule = new Rule;
+        $rule->name = $request->name;
+        $rule->min_age = $request->min_age;
+        $rule->max_age = $request->max_age;
+        $rule->save();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Event  $event
+     * @param  \App\Rule  $rule
      * @return \Illuminate\Http\Response
      */
-    public function show(Event $event)
+    public function show(Rule $rule)
     {
         //
+
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Event  $event
+     * @param  \App\Rule  $rule
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -58,23 +59,24 @@ class EventController extends Controller
         //
         $data = $request->data;
 
-        $event = Event::find($id);
-        $event->name = $data['name'];
-        $event->start_date = $data['start_date'];
-        $event->end_date = $data['end_date'];
-        $event->update();
+        $rule = Rule::find($id);
+        $rule->name = $data['name'];
+        $rule->min_age = $data['min_age'];
+        $rule->max_age = $data['max_age'];
+        $rule->update();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Event  $event
+     * @param  \App\Rule  $rule
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $event = Event::find($id);
-        $event->delete();
+        //
+        $rule = Rule::find($id);
+        $rule->delete();
         return 204;
     }
 }

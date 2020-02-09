@@ -46,27 +46,36 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('username', 'password');
-
+        $this->validate($request, [
+            'username'           => 'required|max:255',
+            'password'           => 'required',
+        ]);
         if (Auth::attempt($credentials)) {
             // Authentication passed...
             // $request->user() returns an instance of the authenticated user..
             $user = $request->user();
 
 
-            // https://laravel.com/docs/5.8/passport#managing-personal-access-tokens
-            $tokenResult = $user->createToken('Personal Access Token');
-            $token = $tokenResult->token;
+            // // https://laravel.com/docs/5.8/passport#managing-personal-access-tokens
+            // $tokenResult = $user->createToken('Personal Access Token');
+            // $token = $tokenResult->token;
+            // $getToken = $tokenResult->accessToken;
+
+            // if ($request->remember_me) {
+            //     // kasih expired seminggu
+            //     $token->expires_at = Carbon::now()->addWeeks(1);
+            // }
 
 
-            if ($request->remember_me) {
-                // kasih expired seminggu
-                $token->expires_at = Carbon::now()->addWeeks(1);
-            }
-
-
-            // save token expired kalo gak remember me expirednya default sekitar 5 jam
-            $token->save();
+            // // save token expired kalo gak remember me expirednya default sekitar 5 jam
+            // $token->save();
+            // session(['token' => $getToken]);
+            //return redirect('admin/members')->with('token', $token);
             return redirect()->intended('admin/members');
+        } else {
+            return redirect()->back()->withErrors([
+                $this->username() => 'Invalid Username or Password',
+            ]);
         }
     }
 }

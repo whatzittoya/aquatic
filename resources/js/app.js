@@ -10,6 +10,7 @@ import VueInputMask from 'vue-inputmask';
 import Vuetify from 'Vuetify';
 import "vuetify/dist/vuetify.min.css";
 
+
 Vue.use(VueRouter, VueAxios, Axios);
 Vue.use(VueInputMask.default);
 Vue.use(Vuetify);
@@ -18,28 +19,34 @@ Vue.use(Vuetify);
 // import file yang dibuat tadi
 import App from './components/App.vue';
 
-import Read from './components/Read.vue';
-import ReadClub from './components/ReadClub.vue';
-// import Update from './components/Update.vue';
+import Member from './components/Member.vue';
+import Club from './components/Club.vue';
+import Event from './components/Event.vue';
+import Rule from './components/Rule.vue';
 
 // membuat router
 const routes = [
     {
-        name: 'read member',
+        name: 'manage member',
         path: '/admin/members',
-        component: Read
+        component: Member
     },
     {
-        name: 'read clubs',
+        name: 'manage clubs',
         path: '/admin/clubs',
-        component: ReadClub
+        component: Club
     },
 
-    // {
-    //     name: 'update',
-    //     path: '/detail/:id',
-    //     component: Update
-    // }
+    {
+        name: 'manage events',
+        path: '/admin/events',
+        component: Event
+    },
+    {
+        name: 'manage rules',
+        path: '/admin/rules',
+        component: Rule
+    }
 ]
 
 const router = new VueRouter({ mode: 'history', routes: routes });

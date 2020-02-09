@@ -37,4 +37,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function roles()
+    {
+        return $this->belongsTo('App\Role', 'role_id');
+    }
+    public function isAdmin()
+    {
+        return $this->roles()->where('name', 'admin')->count() == 1;
+    }
+    public function isClub()
+    {
+        return $this->roles()->where('name', 'club')->count() == 1;
+    }
 }

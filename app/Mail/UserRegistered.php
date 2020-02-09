@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class UserValidated extends Mailable
+class UserRegistered extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,7 +30,7 @@ class UserValidated extends Mailable
     public function build()
     {
         return $this->from('admin-aquatic@aquatic.rcs.my.id')
-            ->subject("Riau Aquatic - User Validated")
-            ->view('emails.user_validated');
+            ->subject("Riau Aquatic - User Registered")
+            ->view('emails.user_registered');
     }
 }

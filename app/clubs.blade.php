@@ -1,14 +1,19 @@
 @extends('adminlte::page')
 @include('includes.vue')
+
+
 @section('content_header')
-    
+    <h1 class="m-0 text-dark">Clubs</h1>
 @stop
 
 @section('content')
- @if ( Auth::user()->isClub())
+@can('admin')
  <div id="app">
  </div>
- @else
-<h2>Sorry, you don't have access on this page</h2>
- @endif
+ @elsecan('club')
+ noooo
+ @endcan
+
 @stop
+
+

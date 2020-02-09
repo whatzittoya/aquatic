@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUseridMember extends Migration
+class Rule extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class AddUseridMember extends Migration
      */
     public function up()
     {
-        Schema::table('members', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id');
+        Schema::create('rules', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->integer('min_age');
+            $table->integer('max_age');
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +31,6 @@ class AddUseridMember extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('rules');
     }
 }
