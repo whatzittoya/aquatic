@@ -12,4 +12,9 @@ class EventController extends Controller
 
         return view('admin.event');
     }
+    public function race($id)
+    {
+
+        return view('admin.eventRace');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Event;
+use App\EventRace;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -34,7 +35,14 @@ class EventController extends Controller
         $event->end_date = $request->end_date;
         $event->save();
     }
+    public function raceStore(Request $request)
+    {
+        $race = new EventRace();
+        $race->event_id = $request->event_id;
+        $race->race_id = $request->race_id;
 
+        $race->save();
+    }
     /**
      * Display the specified resource.
      *
@@ -63,6 +71,17 @@ class EventController extends Controller
         $event->start_date = $data['start_date'];
         $event->end_date = $data['end_date'];
         $event->update();
+    }
+
+    public function raceUpdate(Request $request, $id)
+    {
+        //
+
+        $race = EventRace::find($id);
+        $race->event_id = $request->event_id;
+        $race->race_id = $request->race_id;
+
+        $race->update();
     }
 
     /**

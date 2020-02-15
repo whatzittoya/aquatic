@@ -174,42 +174,7 @@ return [
 
     'menu' => [
 
-        'MENU',
-        [
-            'text'        => 'Member',
-            'route'       => 'members',
-            'icon'        => 'far fa-fw fa-file',
-            'can'  => 'manage-member',
 
-        ],
-        [
-            'text'        => 'Klub',
-            'route'       => 'clubs',
-            'icon'        => 'far fa-fw fa-file',
-            'can'  => 'admin',
-
-        ],
-        [
-            'text'        => 'Event',
-            'route'       => 'events',
-            'icon'        => 'far fa-fw fa-file',
-            'can'  => 'admin',
-
-        ],
-        [
-            'text'        => 'Rule',
-            'route'       => 'rules',
-            'icon'        => 'far fa-fw fa-file',
-            'can'  => 'admin',
-
-        ],
-        'ACCOUNT SETTINGS',
-
-        [
-            'text' => 'Ubah Password',
-            'route' => 'change_pass',
-            'icon' => 'fas fa-fw fa-lock'
-        ],
         // ['header' => 'account_settings'],
         // [
         //     'text' => 'profile',

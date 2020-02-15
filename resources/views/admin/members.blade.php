@@ -8,7 +8,7 @@
 
 @section('content')
 
- <div id="app">
+ <div id="app" :msg="okok">
  </div>
 @stop
 

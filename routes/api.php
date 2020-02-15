@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +25,18 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('clubs', 'API\ClubController');
     Route::apiResource('events', 'API\EventController');
     Route::apiResource('rules', 'API\RuleController');
+    Route::apiResource('races', 'API\RaceController');
+
+    Route::apiResource('participants', 'API\ParticipantController');
+    Route::get('races/byevent/{id}', 'API\RaceController@byEvent');
+    Route::post('events/racesstore', 'API\EventController@raceStore');
+    Route::post('events/racesupdate/{id}', 'API\EventController@raceUpdate');
+
+    Route::get('/role', function () {
+        return response()->json(Auth::user()->getRole());
+    });
 });
+
 
 // Route::get('test/{user}', function (App\User $user) {
 

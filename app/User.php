@@ -50,4 +50,8 @@ class User extends Authenticatable
     {
         return $this->roles()->where('name', 'club')->count() == 1;
     }
+    public function getRole()
+    {
+        return $this->roles()->select('name')->first();
+    }
 }

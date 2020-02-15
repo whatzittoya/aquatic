@@ -22,7 +22,10 @@ import App from './components/App.vue';
 import Member from './components/Member.vue';
 import Club from './components/Club.vue';
 import Event from './components/Event.vue';
+import EventRace from './components/EventRace.vue';
 import Rule from './components/Rule.vue';
+import Race from './components/Race.vue';
+import Participant from './components/Participant.vue';
 
 // membuat router
 const routes = [
@@ -46,6 +49,21 @@ const routes = [
         name: 'manage rules',
         path: '/admin/rules',
         component: Rule
+    },
+    {
+        name: 'manage races',
+        path: '/admin/races',
+        component: Race
+    },
+    {
+        name: 'manage participants',
+        path: '/admin/participants',
+        component: Participant
+    },
+    {
+        name: 'manage EventRace',
+        path: '/admin/event/races/:id',
+        component: EventRace,
     }
 ]
 

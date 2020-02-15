@@ -9,7 +9,7 @@
 
       <div class="col-md-12">
        <v-card-title>
-                    Event
+                    Member
                     <v-spacer></v-spacer>
                 </v-card-title>
         <v-data-table :headers="headers" :items="members" :items-per-page="10" class="elevation-1" :search="search">
@@ -58,23 +58,26 @@
                                 <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
                               </v-date-picker>
                             </v-menu>
-                            <!-- <v-text-field v-model="form.born_date" label="Tanggal Lahir"></v-text-field> -->
-                          </v-col>
-                      
-                            <v-col cols="12" sm="12" md="6">
-                           
-                            <v-text-field ref="best_time" v-model="form.best_time" type="time" label="Best Time" step="0.001" :rules="[rules.required]">
-                            </v-text-field>
                           </v-col>
                               <v-col cols="12" sm="12" md="6">
                             <v-file-input label="Dokumen" accept="image/png, image/jpeg, image/bmp, application/pdf" v-model="form.file"
-                              hint="(extension:jpg,jpeg,png,pdf max-size:500KB)" persistent-hint
+                              hint="(extension:jpg,jpeg,png,pdf max-size:1MB)" persistent-hint
                               :error-messages="file_error_messages" ></v-file-input>
                                </v-col>
-                          <v-col cols="12" sm="12" md="6">
+                          <v-col cols="12" sm="12" md="6" v-if="role == 'admin'">
                             <v-select :items="validation" label="Validasi" v-model="form.valid"></v-select>
                           </v-col>
+                        <v-col cols="12" sm="12" md="6" v-else>
+                          <b>Validasi :</b>
+                          <div v-if="form.valid">
+                              <v-chip class="ma-2" color="green" text-color="white" label> Valid </v-chip>
+                          </div>
+                          <div v-else>
+                            <v-chip class="ma-2" color="red" text-color="white" label> Tidak Valid </v-chip>
+                          </div>
 
+                            
+                          </v-col>
                         </v-row>
                       </v-container>
                     </v-card-text>
@@ -84,7 +87,7 @@
 
                       <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
 
-                      <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                      <v-btn color="blue darken-1" text @click="save" v-if="role == 'admin' || !form.valid">Save</v-btn>
 
                     </v-card-actions>
                   </v-form>
@@ -93,9 +96,7 @@
             </v-toolbar>
           </template>
 
-          <template v-slot:item.best_time="{ item }">
-            {{ timeFormat(item.best_time) }}
-          </template>
+        
           <template v-slot:item.action="{ item }">
             <v-icon small class="mr-2" @click="editData(item)">
               edit
@@ -108,10 +109,8 @@
        <v-icon small>
         insert_drive_file
       </v-icon></a>
-            <!-- <a :href="'/admin/members/'+member.id" target="_blank" class="btn btn-primary">Lampiran</a> -->
           </template>
         </v-data-table>
-        <!-- <v-text-field  v-mask="customTokens" label="Best Time" ></v-text-field> -->
 
 
       </div>
@@ -133,29 +132,14 @@ export default {
     formTitle() {
       return this.edit === false ? "New Item" : "Edit Item";
     },
-    timeToInt: function() {
-      // `this` points to the vm instance
-      let time = this.form.best_time.split(":");
-      if (time.length < 3) {
-        time.unshift(0);
-      }
 
-      let second = time[2].split(".");
-
-      var milisecond =
-        +time[0] * 60 * 60 * 1000 +
-        +time[1] * 60 * 1000 +
-        +second[0] * 1000 +
-        second[1] * 1;
-      return milisecond;
-    },
     formtest() {
       return {
-        name: this.form.name,
-        best_time: this.form.born_date
+        name: this.form.name
       };
     }
   },
+
   data() {
     return {
       // variable array yang akan menampung hasil fetch dari api
@@ -181,7 +165,6 @@ export default {
       headers: [
         { text: "Nama", value: "name" },
         { text: "Tanggal Lahir", value: "born_date" },
-        { text: "Waktu Tercepat", value: "best_time" },
         { text: "Klub", value: "clubs.name" },
         { text: "Valid", value: "valid" },
         { text: "Aksi", value: "action", sortable: false }
@@ -199,8 +182,12 @@ export default {
       search: "",
       id: 0,
       showModal: false,
+      formerrors: {
+        file: ""
+      },
       dialog: false,
-      formHasErrors: false
+      formHasErrors: false,
+      role: ""
     };
   },
   created() {
@@ -209,6 +196,11 @@ export default {
   methods: {
     loadData() {
       // fetch data dari api menggunakan axios
+      axios.get("/api/role").then(response => {
+        // mengirim data hasil fetch ke varibale array persons
+        this.role = response.data.name;
+        // console.log(response.data);
+      });
       axios.get("/api/members").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.members = response.data;
@@ -221,9 +213,8 @@ export default {
           club: this.clubs[0].id,
           name: "",
           born_date: new Date().toISOString().substr(0, 10),
-          best_time: "00:59:59.999",
           document: "",
-          valid: 1
+          valid: 0
         };
         this.form = this.defaultForm;
       });
@@ -241,7 +232,6 @@ export default {
       // edit data
       this.form = Object.assign({}, item);
       this.form.club = item.club_id;
-      this.form.best_time = this.timeFormat(item.best_time);
 
       this.edit = true;
       this.dialog = true;
@@ -272,7 +262,6 @@ export default {
         formData.append("club_id", this.form.club);
         formData.append("name", this.form.name);
         formData.append("born_date", this.form.born_date);
-        formData.append("best_time", this.timeToInt);
         formData.append("file", this.form.file);
         formData.append("filename", this.form.filename);
         formData.append("valid", this.form.valid);
@@ -285,13 +274,21 @@ export default {
               // push router ke read data
               this.loadData();
               this.close();
+            })
+            .catch(errors => {
+              this.file_error_messages = errors.response.data.errors.file;
             });
         } else {
-          axios.post("/api/members", formData, config).then(response => {
-            // push router ke read data
-            this.loadData();
-            this.close();
-          });
+          axios
+            .post("/api/members", formData, config)
+            .then(response => {
+              // push router ke read data
+              this.loadData();
+              this.close();
+            })
+            .catch(errors => {
+              this.file_error_messages = errors.response.data.errors.file;
+            });
         }
       }
     },

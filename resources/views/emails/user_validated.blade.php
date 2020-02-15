@@ -164,7 +164,7 @@
             width: 200px;
             background-color: #414EF9;
             border-radius: 3px;
-            color: #ffffff;
+            color: #ffffff !important;
             font-size: 15px;
             line-height: 45px;
             text-align: center;
@@ -248,7 +248,7 @@
                                                 <td align="center">
                                                     <div>
                                                         
-                                                        <a href="{{route('welcome')}}" class="button button--blue">Buka Website</a>
+                                                        <a href="{{route('welcome')}}" style="text-decoration:none" class="button button--blue">Buka Website</a>
                                                     </div>
                                                 </td>
                                             </tr>

@@ -5,10 +5,10 @@
 
             <div class="col-md-12">
                 <v-card-title>
-                    Event
+                    Peserta
                     <v-spacer></v-spacer>
                 </v-card-title>
-                <v-data-table :headers="headers" :items="events" class="elevation-1" :search="search">
+                <v-data-table :headers="headers" :items="participants" class="elevation-1" :search="search">
                     <template v-slot:top>
                         <v-toolbar flat color="white">
                             <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details>
@@ -17,7 +17,7 @@
                             <v-spacer></v-spacer>
                             <v-dialog v-model="dialog" max-width="500px">
                                 <template v-slot:activator="{ on }">
-                                    <v-btn color="primary" dark class="mb-2" v-on="on">Tambah Event</v-btn>
+                                    <v-btn color="primary" dark class="mb-2" v-on="on">Tambah Peserta</v-btn>
                                 </template>
                                 <v-card>
                                     <v-form @keyup.native.enter="save">
@@ -28,57 +28,47 @@
                                         <v-card-text>
                                             <v-container>
                                                 <v-row>
-
+                                             
+                                                 <v-col cols="12" sm="12" md="6">
+                                                        <v-select v-model="form.event" :items="events" item-text="name"
+                                                            item-value="id" label="Kategori" ></v-select>
+                                                    </v-col>
                                                     <v-col cols="12" sm="12" md="6">
-                                                        <v-text-field ref="name" v-model="form.name" label="Nama"
+                                                        <v-select v-model="form.race" :items="races" item-text="name"
+                                                            item-value="id" label="Lomba" ></v-select>
+                                                    </v-col>
+                                                     <v-col cols="12" sm="12" md="6">
+                                                          <v-select v-model="form.club" :items="clubs" item-text="name"
+                                                            item-value="id" label="Klub" ></v-select>
+                                                    </v-col>
+                                                     <v-col cols="12" sm="12" md="6">
+                                                        <v-select v-model="form.member" :items="members" item-text="name"
+                                                            item-value="id" label="Peserta" ></v-select>
+                                                    </v-col>
+                                                   
+                                                     <v-col cols="12" sm="12" md="6">
+                                                        <v-text-field ref="date_birth" v-model="form.date_birth" label="tanggal lahir"
                                                             :rules="[rules.required]"></v-text-field>
                                                     </v-col>
-
-                                                    <v-col cols="12" sm="12" md="6">
-                                                        <v-menu ref="menu_start" v-model="menu_start"
-                                                            :close-on-content-click="false"
-                                                            :return-value.sync="form.start_date"
-                                                            transition="scale-transition" offset-y min-width="290px">
-                                                            <template v-slot:activator="{ on }">
-                                                                <v-text-field v-model="form.start_date"
-                                                                    label="Tanggal Mulai" readonly v-on="on"
-                                                                    ref="start_date"></v-text-field>
-                                                            </template>
-                                                            <v-date-picker v-model="form.start_date"
-                                                                :max="form.end_date" no-title scrollable :min="date">
-                                                                <v-spacer></v-spacer>
-                                                                <v-btn text color="primary" @click="menu_start = false">
-                                                                    Cancel</v-btn>
-                                                                <v-btn text color="primary"
-                                                                    @click="$refs.menu_start.save(form.start_date)">OK
-                                                                </v-btn>
-                                                            </v-date-picker>
-                                                        </v-menu>
-                                                        <!-- <v-text-field v-model="form.born_date" label="Tanggal Lahir"></v-text-field> -->
+                                                      <v-col cols="12" sm="12" md="6">
+                                                        <v-text-field ref="age" v-model="form.age" label="Umur"
+                                                            :rules="[rules.required]"></v-text-field>
                                                     </v-col>
-                                                    <v-col cols="12" sm="12" md="6">
-                                                        <v-menu ref="menu_end" v-model="menu_end"
-                                                            :close-on-content-click="false"
-                                                            :return-value.sync="form.end_date"
-                                                            transition="scale-transition" offset-y min-width="290px">
-                                                            <template v-slot:activator="{ on }">
-                                                                <v-text-field v-model="form.end_date"
-                                                                    label="Tanggal Selesai" readonly v-on="on"
-                                                                    ref="end_date">
-                                                                </v-text-field>
-                                                            </template>
-                                                            <v-date-picker v-model="form.end_date" no-title scrollable
-                                                                :min="form.start_date">
-                                                                <v-spacer></v-spacer>
-                                                                <v-btn text color="primary" @click="menu_end = false">
-                                                                    Cancel
-                                                                </v-btn>
-                                                                <v-btn text color="primary"
-                                                                    @click="$refs.menu_end.save(form.end_date)">OK
-                                                                </v-btn>
-                                                            </v-date-picker>
-                                                        </v-menu>
-
+                                                      <v-col cols="12" sm="12" md="6">
+                                                        <v-text-field ref="best_time" v-model="form.best_time" label="Best Time"
+                                                            :rules="[rules.required]"></v-text-field>
+                                                    </v-col>
+                                                       <v-col cols="12" sm="12" md="6">
+                                                        <v-select v-model="form.style" :items="styles" item-text="style"
+                                                            item-value="id" label="Gaya" ></v-select>
+                                                    </v-col>
+                                                       <v-col cols="12" sm="12" md="6">
+                                                        <v-select v-model="form.distance" :items="distances" item-text="distance"
+                                                            item-value="id" label="Jarak" ></v-select>
+                                                    </v-col>
+                                                       <v-col cols="12" sm="12" md="6">
+                                                        <v-select v-model="form.name" :items="names" item-text="name"
+                                                            item-value="id" label="Nama Lomba" ></v-select>
                                                     </v-col>
                                                 </v-row>
                                             </v-container>
@@ -96,9 +86,6 @@
                                 </v-card>
                             </v-dialog>
                         </v-toolbar>
-                    </template>
-                           <template v-slot:item.race="{ item }">
-                        <v-btn color="info" dark  :to="'/admin/events/races/'+ item.id">Tambah Lomba</v-btn>
                     </template>
                     <template v-slot:item.action="{ item }">
                         <v-icon small class="mr-2" @click="editData(item)">
@@ -128,8 +115,11 @@ export default {
     formtest() {
       return {
         name: this.form.name,
-        start_date: this.form.start_date,
-        end_date: this.form.end_date
+        age: this.form.age,
+        born_date: this.form.born_date,
+        best_time: this.form.best_time,
+        distance: this.form.distance,
+        style: this.form.style
       };
     }
   },
@@ -140,20 +130,25 @@ export default {
         required: value => !!value || "Required."
       },
       date: new Date().toISOString().substr(0, 10),
-      menu: false,
-      menu_start: false,
-      menu_end: false,
+
       headers: [
-        { text: "Nama", value: "name" },
-        { text: "Tanggal Mulai", value: "start_date" },
-        { text: "Tanggal Selesai", value: "end_date" },
-        { text: "Lomba", value: "race", sortable: false },
+        { text: "Nama Peserta", value: "member.name" },
+        { text: "Club", value: "member.club.name" },
+        { text: "Event", value: "race.event.name" },
+        { text: "Lomba", value: "race.name" },
+        { text: "Best Time", value: "best_time" },
+        { text: "Hasil", value: "result" },
+
         { text: "Aksi", value: "action", sortable: false }
       ],
 
+      participants: [],
+      members: [],
       events: [],
-      edit: false,
+      races: [],
+      clubs: [],
 
+      edit: false,
       showModal: false,
       form: {},
       defaultForm: {},
@@ -169,24 +164,42 @@ export default {
   methods: {
     loadData() {
       // fetch data dari api menggunakan axios
-      axios.get("/api/events").then(response => {
+      axios.get("/api/participants").then(response => {
         // mengirim data hasil fetch ke varibale array persons
-        this.events = response.data;
+        this.participants = response.data;
         // console.log(response.data);
       });
       this.defaultForm = {
         name: "",
-        start_date: new Date().toISOString().substr(0, 10),
-        end_date: new Date(new Date().setDate(new Date().getDate() + 7))
-          .toISOString()
-          .substr(0, 10)
+        date_birth: "",
+        age: "",
+        best_time: "",
+        style: "",
+        distance: ""
       };
+      axios.get("/api/clubs").then(response => {
+        this.clubs = response.data;
+        this.defaultForm.club = this.clubs[0].id;
+      });
+      axios.get("/api/members").then(response => {
+        this.members = response.data;
+        this.defaultForm.member = this.members[0].id;
+      });
+      axios.get("/api/events").then(response => {
+        this.events = response.data;
+        this.defaultForm.events = this.events[0].id;
+      });
+      axios.get("/api/races").then(response => {
+        this.races = response.data;
+        this.defaultForm.races = this.events[0].id;
+      });
+
       this.form = this.defaultForm;
     },
     deleteData(id) {
       // delete data
       if (confirm("Apakah anda yakin ingin menghapus data ini?")) {
-        axios.delete("/api/events/" + id).then(response => {
+        axios.delete("/api/participants/" + id).then(response => {
           this.loadData();
         });
       }
@@ -214,7 +227,7 @@ export default {
         // post data ke api menggunakan axios
         if (this.edit && this.form.id > 0) {
           axios
-            .post("/api/events/" + this.form.id, {
+            .post("/api/participants/" + this.form.id, {
               data: this.form,
               _method: "patch"
             })
@@ -224,7 +237,7 @@ export default {
               this.close();
             });
         } else {
-          axios.post("/api/events", this.form).then(response => {
+          axios.post("/api/participants", this.form).then(response => {
             // push router ke read data
             this.loadData();
             this.close();

@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\UserValidated;
 use Exception;
 use Hash;
+use Illuminate\Support\Facades\Auth;
 use phpDocumentor\Reflection\Types\Null_;
+
 
 class ClubController extends Controller
 {
@@ -22,7 +24,12 @@ class ClubController extends Controller
      */
     public function index()
     {
-        $club = Club::orderBy('name')->with('users:id,email')->get();
+        if (Auth::user()->isAdmin()) {
+            $club = Club::orderBy('name')->with('users:id,email')->get();
+        } else {
+            $club = Club::orderBy('name')->where('user_id', Auth::user()->id)->with('users:id,email')->get();
+        }
+
         return response()->json($club)->setEncodingOptions(JSON_NUMERIC_CHECK);;
     }
 
@@ -52,6 +59,7 @@ class ClubController extends Controller
             $pass = mt_rand(100000, 999999);
             $user->username = $user->email;
             $user->password = Hash::make($pass);
+            $user->role_id = 2;
             $user->update();
 
             $objUser = new \stdClass();
@@ -96,7 +104,7 @@ class ClubController extends Controller
         $club->pic       = $data['pic'];
         $club->valid       = $data['valid'];
 
-        if ($club->valid && ($user->username === Null or $user->username === "")) {
+        if ($club->valid) {
             $pass = mt_rand(100000, 999999);
             $user->username = $user->email;
             $user->password = Hash::make($pass);

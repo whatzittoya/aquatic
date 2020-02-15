@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\UserValidated;
 use Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class MemberController extends Controller
 {
@@ -20,8 +22,13 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $member = Member::select('id', 'name', 'born_date', 'best_time', 'club_id', 'filename', 'valid')->with('clubs:id,name')->get();
-
+        if (Auth::user()->isAdmin()) {
+            $member = Member::select('id', 'name', 'born_date', 'club_id', 'filename', 'valid')->with('clubs:id,name')->get();
+        } else {
+            $member = Member::select('id', 'name', 'born_date', 'club_id', 'filename', 'valid')->with('clubs:id,name')->whereHas('clubs', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            })->get();
+        }
         return response()->json($member)->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
 
@@ -40,26 +47,38 @@ class MemberController extends Controller
         // $user->email = $request->email;
         // $user->name = $request->name;
         // $user->save();
-        $file = $request->file('file');
-        $path = Storage::putFile(
-            'documents',
-            $file
+
+        $rules = array(
+            'file'       => 'required|max:500|mimes:pdf,png,jpg,jpeg',
+
         );
 
 
-        $member = new Member;
-        $member->name       = $request->name;
-        $member->club_id       = $request->club_id;
-        $member->born_date       = $request->born_date;
-        $member->best_time       = $request->best_time;
-        $member->valid       = $request->valid;
-        $member->filename       = $file->getClientOriginalName();
-        $member->path = $path;
-        $member->extension       = $file->getClientOriginalExtension();
-        $member->file_type       = $file->getMimeType();
-        // $member->user_id       = $user->id;
-        $member->save();
+        $validator = Validator::make($request->all(), $rules);
 
+        // process the login
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 500);
+        } else {
+            $file = $request->file('file');
+            $path = Storage::putFile(
+                'documents',
+                $file
+            );
+
+
+            $member = new Member;
+            $member->name       = $request->name;
+            $member->club_id       = $request->club_id;
+            $member->born_date       = $request->born_date;
+            $member->valid       = $request->valid;
+            $member->filename       = $file->getClientOriginalName();
+            $member->path = $path;
+            $member->extension       = $file->getClientOriginalExtension();
+            $member->file_type       = $file->getMimeType();
+            // $member->user_id       = $user->id;
+            $member->save();
+        }
         // if ($request->valid && is_null($user->username)) {
         //     $pass = mt_rand(100000, 999999);
         //     $user->username = $user->email;
@@ -117,7 +136,6 @@ class MemberController extends Controller
         $member->name       = $request->name;
         $member->club_id       = $request->club_id;
         $member->born_date       = $request->born_date;
-        $member->best_time       = $request->best_time;
         echo $request->filename;
         if ($member->filename != $request->filename) {
             $path = Storage::putFile(

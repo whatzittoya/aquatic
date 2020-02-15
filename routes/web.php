@@ -31,7 +31,10 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         return view('home');
     })->name('home');
     Route::get('events', 'EventController@index')->name('events');
+    Route::get('event/races/{id}', 'EventController@race')->name('events_race');
     Route::get('rules', 'RuleController@index')->name('rules');
+    Route::get('races', 'RaceController@index')->name('races');
+    Route::get('participants', 'ParticipantController@index')->name('participants');
     Route::resource('members', 'MemberController')->names([
         'index' => 'members'
     ]);

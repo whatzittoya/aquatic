@@ -19,8 +19,8 @@ body {
   flex-shrink: 0;
   background-color: #fdd835;
    width: 100%;
-    height: 60px;
-    line-height: 60px;
+    height: 30px;
+    line-height: 30px;
 }
       </style>
 </head>

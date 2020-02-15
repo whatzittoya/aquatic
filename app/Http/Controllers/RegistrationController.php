@@ -102,8 +102,6 @@ class RegistrationController extends Controller
             'provinsi'       => 'required',
             'pic'       => 'required',
             'email'       => 'required|email|unique:users',
-
-
         );
         $validator = Validator::make($request->all(), $rules);
 
@@ -120,6 +118,7 @@ class RegistrationController extends Controller
             $user = new User;
             $user->email = $request->email;
             $user->name = $request->nama;
+            $user->role_id = 2;
             $user->save();
 
             $club = new Club;
@@ -147,7 +146,7 @@ class RegistrationController extends Controller
             }
 
 
-            return redirect()->route('register')->with('message', 'Pendaftaran Berhasil');;
+            return redirect()->route('register')->with('message', 'Pendaftaran Berhasil, Silahkan cek kotak masuk atau spam email anda untuk melihat email dari kami');
         }
     }
 
