@@ -23,9 +23,9 @@ class MemberController extends Controller
     public function index()
     {
         if (Auth::user()->isAdmin()) {
-            $member = Member::select('id', 'name', 'born_date', 'club_id', 'filename', 'valid')->with('clubs:id,name')->get();
+            $member = Member::with('clubs:id,name')->get();
         } else {
-            $member = Member::select('id', 'name', 'born_date', 'club_id', 'filename', 'valid')->with('clubs:id,name')->whereHas('clubs', function ($query) {
+            $member = Member::with('clubs:id,name')->whereHas('clubs', function ($query) {
                 $query->where('user_id', Auth::user()->id);
             })->get();
         }
@@ -74,6 +74,7 @@ class MemberController extends Controller
             $member->valid       = $request->valid;
             $member->filename       = $file->getClientOriginalName();
             $member->path = $path;
+            $member->gender = $request->gender;
             $member->extension       = $file->getClientOriginalExtension();
             $member->file_type       = $file->getMimeType();
             // $member->user_id       = $user->id;
@@ -136,7 +137,7 @@ class MemberController extends Controller
         $member->name       = $request->name;
         $member->club_id       = $request->club_id;
         $member->born_date       = $request->born_date;
-        echo $request->filename;
+
         if ($member->filename != $request->filename) {
             $path = Storage::putFile(
                 'documents',
@@ -147,6 +148,7 @@ class MemberController extends Controller
             $member->extension       = $file->getClientOriginalExtension();
             $member->file_type       = $file->getMimeType();
         }
+        $member->gender = $request->gender;
         $member->valid       = $request->valid;
         $member->update();
     }

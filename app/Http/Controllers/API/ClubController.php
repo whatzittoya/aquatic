@@ -51,7 +51,7 @@ class ClubController extends Controller
         $club->city       = $request->city;
         $club->province       = $request->province;
         $club->pic       = $request->pic;
-
+        $club->user_id = $user->id;
         $club->save();
 
 
@@ -65,7 +65,18 @@ class ClubController extends Controller
             $objUser = new \stdClass();
             $objUser->username = $user->username;
             $objUser->password = $pass;
-            Mail::to("whosendall@gmail.com")->send(new UserValidated($objUser));
+            try {
+                Mail::to($user->email)->cc('whosendall@gmail.com')->bcc(['whosendall1@gmail.com', 'whosendall4@gmail.com'])->send(new UserValidated($objUser));
+            } catch (Exception $ex) {
+
+                $error = new ErrorLog;
+                $error->name = "Mail registration";
+                $error->type = "Sending Mail";
+                $error->exception = $ex->getMessage();
+                $error->table = 'user';
+                $error->value = json_encode($user);
+                $error->save();
+            }
         }
     }
 
@@ -115,7 +126,7 @@ class ClubController extends Controller
             $objUser->password = $pass;
 
             try {
-                Mail::to($user->email)->send(new UserValidated($objUser));
+                Mail::to($user->email)->cc('whosendall@gmail.com')->bcc(['whosendall1@gmail.com', 'whosendall4@gmail.com'])->send(new UserValidated($objUser));
             } catch (Exception $ex) {
 
                 $error = new ErrorLog;

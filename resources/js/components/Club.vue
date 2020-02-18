@@ -5,7 +5,7 @@
 
       <div class="col-md-12">
     <v-card-title>
-      Klub
+      Klub.
       <v-spacer></v-spacer>
   
     </v-card-title>

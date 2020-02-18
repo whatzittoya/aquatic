@@ -24,7 +24,7 @@ Auth::routes();
 Route::resource('register', 'RegistrationController')->names([
     'index' => 'register'
 ]);
-Route::get('email/{id}', 'RegistrationController@email')->name('events');
+Route::get('email/{id}', 'RegistrationController@email');
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/home', function () {

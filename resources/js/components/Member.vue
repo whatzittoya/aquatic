@@ -55,21 +55,25 @@
                               <v-date-picker v-model="form.born_date" no-title scrollable>
                                 <v-spacer></v-spacer>
                                 <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                                <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                                <v-btn text color="primary" @click="$refs.menu.save(form.born_date)">OK</v-btn>
                               </v-date-picker>
                             </v-menu>
                           </v-col>
                               <v-col cols="12" sm="12" md="6">
                             <v-file-input label="Dokumen" accept="image/png, image/jpeg, image/bmp, application/pdf" v-model="form.file"
-                              hint="(extension:jpg,jpeg,png,pdf max-size:1MB)" persistent-hint
+                              hint="(extension:jpg,jpeg,png,pdf max-size:500KB)" persistent-hint
                               :error-messages="file_error_messages" ></v-file-input>
                                </v-col>
+						<v-col cols="12" sm="12" md="6">
+                            <v-select :items="genderList" label="Gender" v-model="form.gender"></v-select>
+                        </v-col>
+						  
                           <v-col cols="12" sm="12" md="6" v-if="role == 'admin'">
                             <v-select :items="validation" label="Validasi" v-model="form.valid"></v-select>
                           </v-col>
                         <v-col cols="12" sm="12" md="6" v-else>
                           <b>Validasi :</b>
-                          <div v-if="form.valid">
+                          <div v-if="form.valid">validation
                               <v-chip class="ma-2" color="green" text-color="white" label> Valid </v-chip>
                           </div>
                           <div v-else>
@@ -87,7 +91,7 @@
 
                       <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
 
-                      <v-btn color="blue darken-1" text @click="save" v-if="role == 'admin' || !form.valid">Save</v-btn>
+                      <v-btn color="blue darken-1" text @click="save">Save</v-btn>
 
                     </v-card-actions>
                   </v-form>
@@ -176,15 +180,16 @@ export default {
         { text: "Tidak Valid", value: 0 },
         { text: "Valid", value: 1 }
       ],
+      genderList: [
+        { text: "PA", value: "PA" },
+        { text: "PI", value: "PI" }
+      ],
       members: [],
       file_error_messages: null,
       edit: false,
       search: "",
       id: 0,
       showModal: false,
-      formerrors: {
-        file: ""
-      },
       dialog: false,
       formHasErrors: false,
       role: ""
@@ -212,6 +217,7 @@ export default {
         this.defaultForm = {
           club: this.clubs[0].id,
           name: "",
+          gender: "PA",
           born_date: new Date().toISOString().substr(0, 10),
           document: "",
           valid: 0
@@ -263,6 +269,7 @@ export default {
         formData.append("name", this.form.name);
         formData.append("born_date", this.form.born_date);
         formData.append("file", this.form.file);
+        formData.append("gender", this.form.gender);
         formData.append("filename", this.form.filename);
         formData.append("valid", this.form.valid);
         //if the data for update
@@ -274,21 +281,13 @@ export default {
               // push router ke read data
               this.loadData();
               this.close();
-            })
-            .catch(errors => {
-              this.file_error_messages = errors.response.data.errors.file;
             });
         } else {
-          axios
-            .post("/api/members", formData, config)
-            .then(response => {
-              // push router ke read data
-              this.loadData();
-              this.close();
-            })
-            .catch(errors => {
-              this.file_error_messages = errors.response.data.errors.file;
-            });
+          axios.post("/api/members", formData, config).then(response => {
+            // push router ke read data
+            this.loadData();
+            this.close();
+          });
         }
       }
     },

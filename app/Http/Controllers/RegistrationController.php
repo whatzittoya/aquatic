@@ -11,6 +11,7 @@ use Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserRegistered;
+use App\Mail\UserValidated;
 use Exception;
 use Illuminate\Mail\Message;
 
@@ -171,25 +172,16 @@ class RegistrationController extends Controller
             'Content-Disposition' => 'inline; filename="' . $member->filename . '"'
         ]);
     }
-    // public function email($id)
-    // {
-    //     $pass = mt_rand(100000, 999999);;
-    //     $user = User::find($id);
-    //     $user->username = $user->email;
-    //     $user->password = Hash::make($pass);
-    //     $user->update();
+    public function email($id)
+    {
 
-    //     $objUser = new \stdClass();
-    //     $objUser->username = $user->username;
-    //     $objUser->password = $pass;
-    //     Mail::to("whosendall@gmail.com")->send(new UserValidated($objUser));
-    //     // check for failures
-    //     if (Mail::failures()) {
-    //         echo "error";
-    //     } else {
-    //         echo "success";
-    //     }
-    // }
+        $objUser = new \stdClass();
+        $objUser->username = "Test";
+        $objUser->password = "pass test";
+        Mail::to("whosendall123@gmail.com")->send(new UserValidated($objUser));
+        // check for failures
+        echo count(Mail::failures());
+    }
 
     /**
      * Show the form for editing the specified resource.
