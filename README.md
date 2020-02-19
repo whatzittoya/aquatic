@@ -7,7 +7,7 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
-## About Laravel wkwkwk oke got it and back to earth say sorry wassalam
+## About Laravel wkwkwk oke got it and back to earth say sorry wassalam sds
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable sand creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
