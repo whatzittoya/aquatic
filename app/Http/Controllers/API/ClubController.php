@@ -66,7 +66,7 @@ class ClubController extends Controller
             $objUser->username = $user->username;
             $objUser->password = $pass;
             try {
-                Mail::to($user->email)->cc('whosendall@gmail.com')->bcc(['whosendall1@gmail.com', 'whosendall4@gmail.com'])->send(new UserValidated($objUser));
+                Mail::to($user->email)->cc(explode(',', env("MAIL_CC", "")))->bcc(explode(',', env("MAIL_BCC", "")))->send(new UserValidated($objUser));
             } catch (Exception $ex) {
 
                 $error = new ErrorLog;
@@ -126,7 +126,7 @@ class ClubController extends Controller
             $objUser->password = $pass;
 
             try {
-                Mail::to($user->email)->cc('whosendall@gmail.com')->bcc(['whosendall1@gmail.com', 'whosendall4@gmail.com'])->send(new UserValidated($objUser));
+                Mail::to($user->email)->send(new UserValidated($objUser));
             } catch (Exception $ex) {
 
                 $error = new ErrorLog;

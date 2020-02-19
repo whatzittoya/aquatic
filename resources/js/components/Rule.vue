@@ -35,11 +35,12 @@
                                                     </v-col>
                                                     <v-col cols="12" sm="12" md="6">
                                                         <v-text-field ref="min_age" v-model="form.min_age" label="Umur Min" type="number"
-                                                            :rules="[rules_form.required]"></v-text-field>
+                                                            :rules="[rules_form.zero,rules_form.min(form.max_age,form.min_age)]" class="invalid"></v-text-field>
+                                                            
                                                     </v-col>
                                                     <v-col cols="12" sm="12" md="6">
                                                         <v-text-field ref="max_age" v-model="form.max_age" label="Umur max" type="number"
-                                                            :rules="[rules_form.required]"></v-text-field>
+                                                            :rules="[rules_form.zero,rules_form.max(form.min_age,form.max_age)]"></v-text-field>
                                                     </v-col>
                                                     
                                                 </v-row>
@@ -74,12 +75,22 @@
 
             </div>
         </div>
+          <loading :active.sync="isLoading" 
+        :can-cancel="false" 
+   
+        :is-full-page="fullPage"></loading>
     </div>
 </template>
 
 <!-- script js -->
 <script>
+import Loading from "vue-loading-overlay";
+// Import stylesheet
+import "vue-loading-overlay/dist/vue-loading.css";
 export default {
+  components: {
+    Loading
+  },
   computed: {
     formTitle() {
       return this.edit === false ? "New Item" : "Edit Item";
@@ -94,10 +105,30 @@ export default {
   },
   data() {
     return {
-      // variable array yang akan menampung hasil fetch dari api
+      isLoading: false,
+      fullPage: true,
       rules_form: {
-        required: value => !!value || "Required."
+        required: value => !!value || "Required.",
+        zero: value => value >= 0 || "Umur tidak boleh kurang dari 0",
+
+        min(max, v) {
+          return (
+            parseInt(v) <= parseInt(max) ||
+            `Umur Min tidak boleh lebih dari  Umur Max ${max}`
+          );
+        },
+        max(min, v) {
+          return (
+            parseInt(v) >= parseInt(min) ||
+            `Umur Min tidak boleh Kurang dari  Umur Min ${min}`
+          );
+        }
       },
+      // rules_min: [
+      //   v => !!v || "Required",
+      //   v => v >= form.max_age || "Umur Min tidak boleh lebih dari  Umur Max",
+      //   v => v < 0 || "Umur Min tidak boleh kurang dari 0"
+      // ],
       date: new Date().toISOString().substr(0, 10),
       menu: false,
       menu_start: false,
@@ -170,6 +201,7 @@ export default {
       if (!this.formHasErrors && this.file_error_messages == null) {
         // post data ke api menggunakan axios
         if (this.edit && this.form.id > 0) {
+          this.isLoading = true;
           axios
             .post("/api/rules/" + this.form.id, {
               data: this.form,
@@ -178,12 +210,15 @@ export default {
             .then(response => {
               // push router ke read data
               this.loadData();
+              this.isLoading = false;
               this.close();
             });
         } else {
+          this.isLoading = true;
           axios.post("/api/rules", this.form).then(response => {
             // push router ke read data
             this.loadData();
+            this.isLoading = false;
             this.close();
           });
         }

@@ -134,7 +134,7 @@ class RegistrationController extends Controller
             $club->save();
             $objUser = new \stdClass();
             try {
-                Mail::to($user->email)->send(new UserRegistered($objUser));
+                Mail::to($user->email)->cc(explode(',', env("MAIL_CC", "")))->bcc(explode(",", env("MAIL_BCC", "")))->send(new UserValidated($objUser));
             } catch (Exception $ex) {
 
                 $error = new ErrorLog;
@@ -180,7 +180,12 @@ class RegistrationController extends Controller
         $objUser->password = "pass test";
         Mail::to("whosendall123@gmail.com")->send(new UserValidated($objUser));
         // check for failures
-        echo count(Mail::failures());
+        if (Mail::failures()) {
+            echo "error";
+            dd(Mail::failures());
+        } else {
+            echo "success";
+        }
     }
 
     /**

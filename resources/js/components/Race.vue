@@ -37,7 +37,7 @@
                                                     </v-col>
                                                     <v-col cols="12" sm="12" md="6">
                                                         <v-select v-model="ruleselected" :items="rules_race" item-text="name"
-                                                            item-value="id" label="Kategori" return-object></v-select>
+                                                            item-value="id" label="Kategori" return-object multiple></v-select>
                                                     </v-col>
                                                     <v-col cols="12" sm="12" md="6">
                                                         <v-select v-model="form.gender" :items="genders" label="Jenis Kelamin"></v-select>
@@ -151,7 +151,7 @@ export default {
         { text: "Aksi", value: "action", sortable: false }
       ],
       races: [],
-      genders: [{ text: "LAKI-LAKI" }, { text: "PEREMPUAN" }],
+      genders: [{ text: "PA" }, { text: "PI" }],
       races: [],
       rules_race: [],
       edit: false,
@@ -183,7 +183,7 @@ export default {
       this.defaultForm = {
         name: "",
         race_number: "",
-        gender: "Laki-laki",
+        gender: "PA",
         style: "",
         distance: ""
       };

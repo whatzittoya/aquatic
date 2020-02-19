@@ -101,12 +101,22 @@
 
       </div>
     </div>
+    <loading :active.sync="isLoading" 
+        :can-cancel="false" 
+   
+        :is-full-page="fullPage"></loading>
   </div>
 </template>
 
 <!-- script js -->
 <script>
+import Loading from "vue-loading-overlay";
+// Import stylesheet
+import "vue-loading-overlay/dist/vue-loading.css";
 export default {
+  components: {
+    Loading
+  },
   computed: {
     formTitle() {
       return this.edit === false ? "New Item" : "Edit Item";
@@ -123,7 +133,8 @@ export default {
   },
   data() {
     return {
-      // variable array yang akan menampung hasil fetch dari api
+      isLoading: false,
+      fullPage: true,
       rules: {
         required: value => !!value || "Required."
       },
@@ -212,6 +223,7 @@ export default {
       if (!this.formHasErrors && this.file_error_messages == null) {
         // post data ke api menggunakan axios
         if (this.edit && this.form.id > 0) {
+          this.isLoading = true;
           axios
             .put("/api/clubs/" + this.form.id, {
               data: this.form,
@@ -220,12 +232,15 @@ export default {
             .then(response => {
               // push router ke read data
               this.loadData();
+              this.isLoading = false;
               this.close();
             });
         } else {
+          this.isLoading = true;
           axios.post("/api/clubs", this.form).then(response => {
             // push router ke read data
             this.loadData();
+            this.isLoading = false;
             this.close();
           });
         }

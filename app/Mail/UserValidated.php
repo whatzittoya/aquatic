@@ -29,6 +29,12 @@ class UserValidated extends Mailable
      */
     public function build()
     {
+        if (!empty(env("MAIL_CC", ""))) {
+            $this->cc(env("MAIL_CC", ""));
+        }
+        if (!empty(env("MAIL_BCC", ""))) {
+            $this->bcc(explode(",", env("MAIL_BCC", "")));
+        }
         return $this->from('admin-aquatic@aquatic.rcs.my.id')
             ->subject("Riau Aquatic - User Validated")
             ->view('emails.user_validated');
