@@ -84,6 +84,7 @@ class AppServiceProvider extends ServiceProvider
                         ],
                         [
                             'text' => 'Peserta',
+                            'url'  => 'admin/event/participants/all',
                             'icon' => 'user',
                         ]
 

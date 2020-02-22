@@ -14,7 +14,5 @@ class EventController extends Controller
     }
     public function race($id)
     {
-
-        return view('admin.eventRace');
     }
 }

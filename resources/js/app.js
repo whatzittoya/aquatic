@@ -23,9 +23,10 @@ import Member from './components/Member.vue';
 import Club from './components/Club.vue';
 import Event from './components/Event.vue';
 import EventRace from './components/EventRace.vue';
+import EventParticipant from './components/EventParticipant.vue';
 import Rule from './components/Rule.vue';
-import Race from './components/Race.vue';
 import Participant from './components/Participant.vue';
+import PureRace from './components/PureRace.vue';
 
 // membuat router
 const routes = [
@@ -53,7 +54,7 @@ const routes = [
     {
         name: 'manage races',
         path: '/admin/races',
-        component: Race
+        component: PureRace
     },
     {
         name: 'manage participants',
@@ -64,6 +65,11 @@ const routes = [
         name: 'manage EventRace',
         path: '/admin/event/races/:id',
         component: EventRace,
+    },
+    {
+        name: 'manage EventParticipant',
+        path: '/admin/event/participants/:id',
+        component: EventParticipant,
     }
 ]
 

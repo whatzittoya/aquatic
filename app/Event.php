@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Event extends Model
 {
     use SoftDeletes;
+
+    public function races()
+    {
+        return $this->hasMany('App\EventRace');
+    }
 }

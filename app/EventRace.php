@@ -9,5 +9,14 @@ class EventRace extends Model
 {
     //
     use SoftDeletes;
-    protected $table = 'event_race';
+    protected $table = 'races';
+
+    public function rules()
+    {
+        return $this->belongsToMany('App\Rule', 'event_race_categories', 'event_race_id');
+    }
+    public function pureRaces()
+    {
+        return $this->belongsTo('App\PureRace', 'pure_race_id');
+    }
 }

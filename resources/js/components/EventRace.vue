@@ -38,22 +38,7 @@
                                                            return-object ></v-select>
                                                     </v-col>
                                                    
-                                                    <v-col cols="12" sm="12" md="6">
-                                                        <v-text-field  v-model="form.race_number"
-                                                            label="Nomor"  disabled="">
-                                                        </v-text-field>
-                                                    </v-col>
-                                                    <v-col cols="12" sm="12" md="6">
-                                                        <v-text-field v-model="form.rule"
-                                                            label="Kategori" 
-                                                             disabled="">
-                                                        </v-text-field>
-                                                    </v-col>
-                                                    <v-col cols="12" sm="12" md="6">
-                                                  <v-text-field  v-model="form.gender"
-                                                            label="Gender"  disabled="">
-                                                        </v-text-field>
-                                                    </v-col>
+                                                  
                                                     <v-col cols="12" sm="12" md="6">
                                                         <v-text-field v-model="form.style" label="Gaya"
                                                             disabled>
@@ -64,7 +49,18 @@
                                                             label="Jarak" disabled>
                                                         </v-text-field>
                                                     </v-col>
-                                                   
+                                                     <v-col cols="12" sm="12" md="6">
+                                                        <v-text-field ref="race_number" v-model="form.race_number"
+                                                            label="Nomor" :rules="[races_form.required]" :error-messages="formerrors.race_number">
+                                                        </v-text-field>
+                                                    </v-col>
+                                                    <v-col cols="12" sm="12" md="6">
+                                                        <v-select v-model="form.rules" :items="rules_select" item-text="name"
+                                                            item-value="id" label="Kategori" multiple   ></v-select>
+                                                    </v-col>
+                                                    <v-col cols="12" sm="12" md="6">
+                                                        <v-select v-model="form.gender" :items="genders" label="Jenis Kelamin"></v-select>
+                                                    </v-col>
                                                 </v-row>
                                             </v-container>
                                         </v-card-text>
@@ -82,6 +78,7 @@
                             </v-dialog>
                         </v-toolbar>
                     </template>
+                 
                     <template v-slot:item.action="{ item }">
                         <v-icon small class="mr-2" @click="editData(item)">
                             edit
@@ -106,35 +103,44 @@ export default {
   computed: {
     formTitle() {
       return this.edit === false ? "New Item" : "Edit Item";
+    },
+    formtest() {
+      return {
+        race_number: this.form.race_number
+      };
     }
   },
 
   data() {
     return {
       id: "",
-      ruleselected: {},
-
       headers: [
-        { text: "Nama", value: "name" },
-        { text: "Kategori", value: "rule.name" },
+        { text: "Nama", value: "pure_races.name" },
         { text: "Nomor", value: "race_number" },
         { text: "Jenis Kelamin", value: "gender" },
-        { text: "Gaya", value: "style" },
-        { text: "Jarak", value: "distance" },
+        { text: "Gaya", value: "pure_races.style" },
+        { text: "Jarak", value: "pure_races.distance" },
         { text: "Aksi", value: "action", sortable: false }
       ],
+
+      races_form: {
+        required: value => !!value || "Required."
+      },
+
       races: [],
-      genders: [{ text: "Laki-laki" }, { text: "Perempuan" }],
+      genders: [{ text: "PA" }, { text: "PI" }],
       races: [],
       rules_race: [],
       edit: false,
-      errors: [{ a: 123 }, { b: 1233 }],
+
       showModal: false,
 
       events: [],
       event: "",
       races_select: [],
-      race_selected: "",
+      race_selected: [],
+
+      rules_select: [],
 
       form: {},
       defaultForm: {},
@@ -146,8 +152,7 @@ export default {
       dialog: false,
       formHasErrors: false,
 
-      ruletext: "",
-      disablewatch: false
+      ruletext: ""
     };
   },
   created() {
@@ -158,34 +163,35 @@ export default {
   methods: {
     loadData() {
       if (this.id > 0) {
-        axios.get("/api/races/byevent/" + this.id).then(response => {
+        axios.get("/api/events/races/" + this.id).then(response => {
           this.races = response.data;
         });
+        this.event = parseInt(this.id);
       }
-      axios.get("/api/races").then(response => {
+      this.defaultForm = {
+        name: "",
+        race_number: "",
+        gender: "PA",
+        style: "",
+        distance: "",
+        rules: []
+      };
+      this.form = this.defaultForm;
+      axios.get("/api/rules").then(response => {
+        this.rules_select = response.data;
+      });
+      axios.get("/api/events/races/available/" + this.id).then(response => {
         this.races_select = response.data;
         this.race_selected = this.races_select[0];
       });
       axios.get("/api/events").then(response => {
         this.events = response.data;
       });
-      this.defaultForm = {
-        name: "",
-        race_number: "",
-        gender: "Laki-laki",
-        style: "",
-        distance: ""
-      };
-      this.form = this.defaultForm;
-      axios.get("/api/rules").then(response => {
-        this.rules_race = response.data;
-        this.ruleselected = this.rules_race[0];
-      });
     },
     deleteData(id) {
       // delete data
       if (confirm("Apakah anda yakin ingin menghapus data ini?")) {
-        axios.delete("/api/races/" + id).then(response => {
+        axios.delete("/api/events/races/" + id).then(response => {
           this.loadData();
         });
       }
@@ -193,10 +199,9 @@ export default {
     editData(item) {
       // delete data
       this.form = Object.assign({}, item);
-      this.race_selected = this.form.id;
+      this.race_selected = item.pure_races;
       this.edit = true;
       this.dialog = true;
-      this.disablewatch = true;
     },
     createData() {
       // delete data
@@ -205,34 +210,50 @@ export default {
     },
     save() {
       this.formHasErrors = false;
-      this.form.rule = this.ruleselected.id;
+      this.form.event_id = this.id;
+      this.form.pure_race = this.race_selected.id;
+      Object.keys(this.formtest).forEach(f => {
+        if (!this.formtest[f]) this.formHasErrors = true;
 
-      let formData = new FormData();
-      formData.append("race_id", this.race_selected.id);
-      formData.append("event_id", this.id);
+        this.$refs[f].validate(true);
+      });
+      if (!this.formHasErrors && this.file_error_messages == null) {
+        if (this.edit && this.form.id > 0) {
+          axios
+            .post("/api/events/races/" + this.form.id, {
+              data: this.form,
+              _method: "patch"
+            })
 
-      if (this.edit && this.form.id > 0) {
-        axios
-          .post("/api/events/racesupdate/" + this.form.id, formData)
+            .then(response => {
+              // push router ke read data
+              this.loadData();
+              this.close();
+            })
+            .catch(errors => {
+              this.formerrors.race_number =
+                errors.response.data.errors.race_number;
+            });
+        } else {
+          axios
+            .post("/api/events/races/", this.form)
+            .then(response => {
+              // push router ke read data
 
-          .then(response => {
-            // push router ke read data
-            this.loadData();
-            this.close();
-          });
-      } else {
-        axios.post("/api/events/racesstore", formData).then(response => {
-          // push router ke read data
-
-          this.loadData();
-          this.close();
-        });
+              this.loadData();
+              this.close();
+            })
+            .catch(errors => {
+              this.formerrors.race_number =
+                errors.response.data.errors.race_number;
+            });
+        }
       }
     },
     close() {
       this.disablewatch = false;
       this.dialog = false;
-
+      this.formerrors.race_number = "";
       setTimeout(() => {
         this.form = this.defaultForm;
         this.edit = false;
@@ -248,9 +269,8 @@ export default {
       this.loadData();
     },
     race_selected(val) {
-      this.form = Object.assign({}, val);
-
-      this.form.rule = this.form.rule.name;
+      this.form.style = val.style;
+      this.form.distance = val.distance;
     }
   }
 };

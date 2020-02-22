@@ -98,7 +98,10 @@
                         </v-toolbar>
                     </template>
                            <template v-slot:item.race="{ item }">
-                        <v-btn color="info" dark  :to="'/admin/events/races/'+ item.id">Tambah Lomba</v-btn>
+                        <v-btn color="info" dark  :to="'/admin/event/races/'+ item.id">Tambah Lomba</v-btn>
+                    </template>
+                     <template v-slot:item.participant="{ item }">
+                        <v-btn color="success" dark  :to="'/admin/event/participants/'+ item.id">Tambah Peserta</v-btn>
                     </template>
                     <template v-slot:item.action="{ item }">
                         <v-icon small class="mr-2" @click="editData(item)">
@@ -148,6 +151,7 @@ export default {
         { text: "Tanggal Mulai", value: "start_date" },
         { text: "Tanggal Selesai", value: "end_date" },
         { text: "Lomba", value: "race", sortable: false },
+        { text: "Peserta", value: "participant", sortable: false },
         { text: "Aksi", value: "action", sortable: false }
       ],
 

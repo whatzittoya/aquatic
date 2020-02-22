@@ -81,6 +81,7 @@ class ClubController extends Controller
      */
     public function destroy(Club $club)
     {
+
         //
     }
 }

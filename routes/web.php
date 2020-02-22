@@ -31,9 +31,16 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         return view('home');
     })->name('home');
     Route::get('events', 'EventController@index')->name('events');
-    Route::get('event/races/{id}', 'EventController@race')->name('events_race');
+    Route::get('event/races/{id}', function () {
+        return view('admin.eventRace');
+    })->name('events_race');
+    Route::get('event/participants/{id}', function () {
+        return view('admin.eventParticipant');
+    })->name('events_race');
     Route::get('rules', 'RuleController@index')->name('rules');
-    Route::get('races', 'RaceController@index')->name('races');
+    Route::get('/races', function () {
+        return view('admin.pure_races');
+    })->name('races');
     Route::get('participants', 'ParticipantController@index')->name('participants');
     Route::resource('members', 'MemberController')->names([
         'index' => 'members'

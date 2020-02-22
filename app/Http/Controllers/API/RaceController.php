@@ -16,17 +16,11 @@ class RaceController extends Controller
      */
     public function index()
     {
-        $race = Race::with('rule:id,name')->get();
+        $race = Race::get();
         return response()->json($race);
     }
 
-    public function byEvent($id)
-    {
-        $race = Race::whereHas('event', function ($q) use ($id) {
-            $q->where('events.id', '=', $id);
-        })->get();
-        return response()->json($race);
-    }
+
     /**
      * Store a newly created resource in storage.
      *
