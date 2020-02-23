@@ -7,11 +7,9 @@ use App\EventRace;
 use App\Http\Controllers\Controller;
 use App\Member;
 use App\Participant;
-use App\Race;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class EventParticipantController extends Controller
 {
@@ -57,7 +55,7 @@ class EventParticipantController extends Controller
      */
     public function show($id)
     {
-        $participant = Participant::with('member:id,name', 'club:id,name', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'rule:id,name')->where('event_id', $id)->get();
+        $participant = Participant::with('member:id,name,gender', 'club:id,name', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'rule:id,name')->where('event_id', $id)->get();
         return response()->json($participant);
     }
 
@@ -78,7 +76,7 @@ class EventParticipantController extends Controller
         $today = new DateTime(date('m.d.y'));
         $diff = $today->diff($bday);
         $age = $diff->y;
-        $race = EventRace::with('pureRaces:name,id', 'rules:rules.id,name,min_age,max_age')->where('event_id', $id)->whereHas('rules', function ($query) use ($age) {
+        $race = EventRace::with('pureRaces:name,id', 'rules:rules.id,name,min_age,max_age')->where('event_id', $id)->where('gender', $member->gender)->whereHas('rules', function ($query) use ($age) {
             $query->where('min_age', '<=', $age);
             $query->where('max_age', '>=', $age);
         })->select('id', 'pure_race_id')->whereNotIn('id', function ($query) use ($member_id, $id) {

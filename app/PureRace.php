@@ -12,4 +12,8 @@ class PureRace extends Model
     {
         return $this->belongsToMany('App\Event', 'event_race');
     }
+    public function races()
+    {
+        return $this->hasMany('App\EventRace', 'pure_race_id');
+    }
 }

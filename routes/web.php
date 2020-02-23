@@ -30,6 +30,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/home', function () {
         return view('home');
     })->name('home');
+    Route::get('/home/{id}', function () {
+        return view('admin.liveMatch');
+    })->name('livematch');
     Route::get('events', 'EventController@index')->name('events');
     Route::get('event/races/{id}', function () {
         return view('admin.eventRace');
@@ -37,6 +40,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('event/participants/{id}', function () {
         return view('admin.eventParticipant');
     })->name('events_race');
+    Route::get('event/matches/{id}', function () {
+        return view('admin.eventMatch');
+    })->name('events_match');
     Route::get('rules', 'RuleController@index')->name('rules');
     Route::get('/races', function () {
         return view('admin.pure_races');

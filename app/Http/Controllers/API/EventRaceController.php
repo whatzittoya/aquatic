@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule as ValidationRule;
 use App\PureRace;
+use Illuminate\Support\Facades\DB;
 
 class EventRaceController extends Controller
 {
@@ -72,9 +73,12 @@ class EventRaceController extends Controller
     }
     public function available($id)
     {
-        $race = PureRace::whereNotIn('id', function ($query) use ($id) {
-            $query->select('pure_race_id')->from('races')->where('event_id', $id)->where('deleted_at', null);
+        $race = PureRace::with(['races' => function ($query) use ($id) {
+            $query->where('event_id', $id)->select('pure_race_id', 'gender');
+        }])->whereNotIn('id', function ($query) use ($id) {
+            $query->select('pure_race_id')->from('races')->where('event_id', $id)->where('deleted_at', null)->whereRaw('(gender = ? or gender=?)', ['PA', 'PI'])->groupBy('pure_race_id')->havingRaw('count(pure_race_id)>1');
         })->get();
+
         return response()->json($race);
     }
 

@@ -32,6 +32,13 @@ class AppServiceProvider extends ServiceProvider
             $event->menu->add(
                 'MENU',
                 [
+                    'text'        => 'Home - Live Result',
+                    'url'       => 'admin/home/all',
+                    'icon'        => 'far fa-fw fa-file',
+                    'can'  => 'manage-member',
+
+                ],
+                [
                     'text'        => 'Member',
                     'route'       => 'members',
                     'icon'        => 'far fa-fw fa-file',
@@ -85,6 +92,11 @@ class AppServiceProvider extends ServiceProvider
                         [
                             'text' => 'Peserta',
                             'url'  => 'admin/event/participants/all',
+                            'icon' => 'user',
+                        ],
+                        [
+                            'text' => 'Hasil Pertandingan',
+                            'url'  => 'admin/event/matches/all',
                             'icon' => 'user',
                         ]
 

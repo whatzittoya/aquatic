@@ -28,18 +28,22 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('races', 'API\PureRaceController');
 
     Route::apiResource('participants', 'API\ParticipantController');
-    Route::get('events/races/available/{id}', 'API\EventRaceController@available');
+
 
     Route::apiResource('events/races', 'API\EventRaceController');
+    Route::get('events/races/available/{id}', 'API\EventRaceController@available');
 
+    Route::get('events/participants/races/{id}/{member_id}', 'API\EventParticipantController@getRace');
+    Route::apiResource('events/participants', 'API\EventParticipantController');
     Route::get('events/participants/members/{id}', 'API\EventParticipantController@getClubMember');
+
+
     Route::get('/role', function () {
         return response()->json(Auth::user()->getRole());
     });
 });
-Route::get('events/participants/races/{id}/{member_id}', 'API\EventParticipantController@getRace');
+Route::apiResource('events/matches', 'API\EventMatchController');
 
-Route::apiResource('events/participants', 'API\EventParticipantController');
 
 // Route::get('test/{user}', function (App\User $user) {
 

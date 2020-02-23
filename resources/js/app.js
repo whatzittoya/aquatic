@@ -27,6 +27,8 @@ import EventParticipant from './components/EventParticipant.vue';
 import Rule from './components/Rule.vue';
 import Participant from './components/Participant.vue';
 import PureRace from './components/PureRace.vue';
+import EventMatch from './components/EventMatch.vue';
+import LiveMatch from './components/LiveMatch.vue';
 
 // membuat router
 const routes = [
@@ -70,7 +72,18 @@ const routes = [
         name: 'manage EventParticipant',
         path: '/admin/event/participants/:id',
         component: EventParticipant,
+    },
+    {
+        name: 'manage EventMatch',
+        path: '/admin/event/matches/:id',
+        component: EventMatch,
+    },
+    {
+        name: 'manage LiveMatch',
+        path: '/admin/home/:id',
+        component: LiveMatch,
     }
+
 ]
 
 const router = new VueRouter({ mode: 'history', routes: routes });

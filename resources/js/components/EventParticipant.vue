@@ -105,7 +105,10 @@
                         </v-toolbar>
                     </template>
                      <template v-slot:item.best_time="{ item }">
-            {{ timeFormat(item.best_time) }}
+            {{ item.best_time}}
+          </template>
+          <template v-slot:item.valid_payment="{ item }">
+              {{item.valid_payment==1?'Valid':'Tidak Valid'}}
           </template>
                     <template v-slot:item.action="{ item }">
                         <v-icon small class="mr-2" @click="editData(item)">
@@ -122,12 +125,22 @@
                 <!-- <v-select v-model="a.currentItem" :items="items"></v-select> -->
             </div>
         </div>
+                <loading :active.sync="isLoading" 
+        :can-cancel="false" 
+   
+        :is-full-page="fullPage"></loading>
     </div>
 </template>
 
 <!-- script js -->
 <script>
+import Loading from "vue-loading-overlay";
+// Import stylesheet
+import "vue-loading-overlay/dist/vue-loading.css";
 export default {
+  components: {
+    Loading
+  },
   computed: {
     formTitle() {
       return this.edit === false ? "New Item" : "Edit Item";
@@ -167,15 +180,19 @@ export default {
 
   data() {
     return {
+      isLoading: false,
+      fullPage: true,
       id: "",
       event_name: "",
       participants: [],
       headers: [
         { text: "Klub", value: "club.name" },
         { text: "Nama", value: "member.name" },
+        { text: "Gender", value: "member.gender" },
         { text: "Lomba", value: "race.pure_races.name" },
         { text: "Kategori", value: "rule.name" },
         { text: "Best Time", value: "best_time" },
+        { text: "Pembayaran", value: "valid_payment" },
         { text: "Aksi", value: "action", sortable: false }
       ],
 
@@ -281,8 +298,9 @@ export default {
 
       //     this.$refs[f].validate(true);
       //   });
-      if (!this.formHasErrors && this.file_error_messages == null) {
+      if (!this.formHasErrors) {
         if (this.edit && this.form.id > 0) {
+          this.isLoading = true;
           axios
             .post("/api/events/participants/" + this.form.id, {
               data: this.form,
@@ -292,16 +310,19 @@ export default {
             .then(response => {
               // push router ke read data
               this.loadData();
+              this.isLoading = false;
               this.close();
             })
             .catch(errors => {});
         } else {
+          this.isLoading = true;
           axios
             .post("/api/events/participants/", this.form)
             .then(response => {
               // push router ke read data
 
               this.loadData();
+              this.isLoading = false;
               this.close();
             })
             .catch(errors => {});
@@ -348,8 +369,9 @@ export default {
     "form.member"(val) {
       this.born_date = val.born_date;
       this.gender = val.gender;
+      var id = this.id;
       axios
-        .get("/api/events/participants/races/" + this.id + "/" + val.id)
+        .get("/api/events/participants/races/" + id + "/" + val.id)
         .then(response => {
           this.races = response.data;
           this.form.race = this.races[0];

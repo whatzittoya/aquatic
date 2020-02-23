@@ -13,4 +13,9 @@ class Event extends Model
     {
         return $this->hasMany('App\EventRace');
     }
+
+    public function participants()
+    {
+        return $this->hasMany('App\Participant');
+    }
 }

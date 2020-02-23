@@ -20,7 +20,7 @@
                             <v-spacer></v-spacer>
                             <v-dialog v-model="dialog" max-width="500px">
                                 <template v-slot:activator="{ on }">
-                                    <v-btn color="primary" dark class="mb-2" v-on="on">Tambah Lomba</v-btn>
+                                    <v-btn color="primary" dark class="mb-2" v-on="on" :disabled="id=='all'">Tambah Lomba</v-btn>
                                 </template>
                                 <v-card>
                                     <v-form @keyup.native.enter="save">
@@ -94,12 +94,22 @@
                 <!-- <v-select v-model="a.currentItem" :items="items"></v-select> -->
             </div>
         </div>
+         <loading :active.sync="isLoading" 
+        :can-cancel="false" 
+   
+        :is-full-page="fullPage"></loading>
     </div>
 </template>
 
 <!-- script js -->
 <script>
+import Loading from "vue-loading-overlay";
+// Import stylesheet
+import "vue-loading-overlay/dist/vue-loading.css";
 export default {
+  components: {
+    Loading
+  },
   computed: {
     formTitle() {
       return this.edit === false ? "New Item" : "Edit Item";
@@ -113,6 +123,8 @@ export default {
 
   data() {
     return {
+      isLoading: false,
+      fullPage: true,
       id: "",
       headers: [
         { text: "Nama", value: "pure_races.name" },
@@ -219,6 +231,7 @@ export default {
       });
       if (!this.formHasErrors && this.file_error_messages == null) {
         if (this.edit && this.form.id > 0) {
+          this.isLoading = true;
           axios
             .post("/api/events/races/" + this.form.id, {
               data: this.form,
@@ -228,22 +241,27 @@ export default {
             .then(response => {
               // push router ke read data
               this.loadData();
+              this.isLoading = false;
               this.close();
             })
             .catch(errors => {
+              this.isLoading = false;
               this.formerrors.race_number =
                 errors.response.data.errors.race_number;
             });
         } else {
+          this.isLoading = true;
           axios
             .post("/api/events/races/", this.form)
             .then(response => {
               // push router ke read data
 
               this.loadData();
+              this.isLoading = false;
               this.close();
             })
             .catch(errors => {
+              this.isLoading = false;
               this.formerrors.race_number =
                 errors.response.data.errors.race_number;
             });
@@ -271,6 +289,12 @@ export default {
     race_selected(val) {
       this.form.style = val.style;
       this.form.distance = val.distance;
+      var races = val.races;
+      let gender_picked = races.map(r => r.gender);
+      let g = [{ text: "PA" }, { text: "PI" }];
+      this.genders = g.filter(function(el) {
+        return gender_picked.indexOf(el.text) < 0;
+      });
     }
   }
 };
