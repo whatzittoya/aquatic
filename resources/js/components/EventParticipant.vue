@@ -195,9 +195,9 @@ export default {
           return event.id == id;
         });
 
-        return e[0].lock != 1 ? true : false;
+        return e[0].lock != 1 ? false : true;
       } catch (error) {
-        return 0;
+        return 1;
       }
     }
   },
