@@ -19,8 +19,8 @@
 
                             <v-spacer></v-spacer>
                             <v-dialog v-model="dialog" max-width="500px">
-                                <template v-slot:activator="{ on }">
-                                    <v-btn color="primary" dark class="mb-2" v-on="on" :disabled="id=='all'">Tambah Lomba</v-btn>
+                                <template v-slot:activator="{ on }" >
+                                    <v-btn color="primary" dark class="mb-2" v-on="on" :disabled="id=='all' || locked" >Tambah Lomba</v-btn>
                                 </template>
                                 <v-card>
                                     <v-form @keyup.native.enter="save">
@@ -79,7 +79,7 @@
                         </v-toolbar>
                     </template>
                  
-                    <template v-slot:item.action="{ item }">
+                    <template v-slot:item.action="{ item }" v-if="!locked">
                         <v-icon small class="mr-2" @click="editData(item)">
                             edit
                         </v-icon>
@@ -93,6 +93,7 @@
                 </v-data-table>
                 <!-- <v-select v-model="a.currentItem" :items="items"></v-select> -->
             </div>
+           
         </div>
          <loading :active.sync="isLoading" 
         :can-cancel="false" 
@@ -118,6 +119,18 @@ export default {
       return {
         race_number: this.form.race_number
       };
+    },
+    locked() {
+      var id = this.event;
+      try {
+        let e = this.events.filter(function(event) {
+          return event.id == id;
+        });
+
+        return e[0].lock;
+      } catch (error) {
+        return 1;
+      }
     }
   },
 
@@ -170,6 +183,12 @@ export default {
   created() {
     this.id = this.$route.params.id;
     this.loadData();
+    axios.get("/api/events").then(response => {
+      this.events = response.data;
+    });
+    axios.get("/api/rules").then(response => {
+      this.rules_select = response.data;
+    });
   },
 
   methods: {
@@ -189,15 +208,10 @@ export default {
         rules: []
       };
       this.form = this.defaultForm;
-      axios.get("/api/rules").then(response => {
-        this.rules_select = response.data;
-      });
+
       axios.get("/api/events/races/available/" + this.id).then(response => {
         this.races_select = response.data;
         this.race_selected = this.races_select[0];
-      });
-      axios.get("/api/events").then(response => {
-        this.events = response.data;
       });
     },
     deleteData(id) {

@@ -5,10 +5,8 @@
 @stop
 
 @section('content')
- @if ( Auth::user()->isAdmin())
+
  <div id="app">
  </div>
- @else
-<h2>Sorry, you don't have access on this page</h2>
- @endif
+
 @stop

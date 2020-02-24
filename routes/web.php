@@ -55,6 +55,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         'index' => 'clubs'
     ]);
     Route::resource('/passwords/change', 'ChangePassController')->names(['index' => 'change_pass']);
+    Route::resource('/profile', 'ProfileController')->names(['index' => 'profile', 'store' => 'u_profile']);
 });
 
 Route::get('/{url}', function ($url) {

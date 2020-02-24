@@ -1,13 +1,13 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
-
+@import "~/fonts/Nurito.css";
 // Variables
 @import 'variables';
 
 // @import '~@mdi/font/css/materialdesignicons.css';
 @import "~/fonts/vendor/@mdi/font/css/materialdesignicons.min.css";
 @import '~bootstrap/scss/bootstrap';
-@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons');
+
+@import "~/fonts/roboto.css";
 
 .modal-mask {
     position: fixed;

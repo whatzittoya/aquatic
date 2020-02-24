@@ -98,10 +98,13 @@
                         </v-toolbar>
                     </template>
                            <template v-slot:item.race="{ item }">
-                        <v-btn color="info" dark  :to="'/admin/event/races/'+ item.id">Tambah Lomba</v-btn>
+                        <v-btn small block color="info" dark  :to="'/admin/event/races/'+ item.id">{{event_action_text(item.lock,1)}}</v-btn>
                     </template>
                      <template v-slot:item.participant="{ item }">
-                        <v-btn color="success" dark  :to="'/admin/event/participants/'+ item.id">Tambah Peserta</v-btn>
+                        <v-btn small block color="success" dark  :to="'/admin/event/participants/'+ item.id">{{event_action_text(item.lock,1)}} </v-btn>
+                    </template>
+                        <template v-slot:item.match="{ item }">
+                        <v-btn small block color="warning" dark  :to="'/admin/event/matches/'+ item.id">{{event_action_text(item.lock,2)}} </v-btn>
                     </template>
                     <template v-slot:item.action="{ item }">
                         <v-icon small class="mr-2" @click="editData(item)">
@@ -163,6 +166,7 @@ export default {
         { text: "Tanggal Selesai", value: "end_date" },
         { text: "Lomba", value: "race", sortable: false },
         { text: "Peserta", value: "participant", sortable: false },
+        { text: "Pertandingan", value: "match", sortable: false },
         { text: "Aksi", value: "action", sortable: false }
       ],
 
@@ -261,6 +265,23 @@ export default {
           this.$refs[f].reset();
         });
       }, 300);
+    },
+    event_action_text(stat, index) {
+      if (stat) {
+        switch (index) {
+          case 1:
+            return "Lihat";
+          case 2:
+            return "Tampilkan";
+        }
+      } else {
+        switch (index) {
+          case 1:
+            return "Tambah";
+          case 2:
+            return "Generate";
+        }
+      }
     }
   },
   watch: {

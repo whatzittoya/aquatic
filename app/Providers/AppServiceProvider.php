@@ -60,44 +60,35 @@ class AppServiceProvider extends ServiceProvider
                     'can'  => 'admin',
 
                 ],
-                [
-                    'text'        => 'Lomba',
-                    'route'       => 'races',
-                    'icon'        => 'far fa-fw fa-file',
-                    'can'  => 'admin',
 
-                ],
-                [
-                    'text'        => 'Peserta',
-                    'route'       => 'participants',
-                    'icon'        => 'far fa-fw fa-file',
-                    'can'  => 'admin',
-
-                ],
                 [
                     'text' => 'Event',
                     'icon' => 'far fa-fw fa-file',
-                    'can'  => 'admin',
+
                     'submenu' => [
                         [
                             'text' => 'Daftar Event',
                             'route'  => 'events',
                             'icon' => 'user',
+                            'can'  => 'admin',
                         ],
                         [
                             'text' => 'Lomba Event',
                             'url'  => 'admin/event/races/all',
                             'icon' => 'user',
+                            'can'  => 'admin',
                         ],
                         [
                             'text' => 'Peserta',
                             'url'  => 'admin/event/participants/all',
                             'icon' => 'user',
+                            'can'  => 'manage-member',
                         ],
                         [
                             'text' => 'Hasil Pertandingan',
                             'url'  => 'admin/event/matches/all',
                             'icon' => 'user',
+                            'can'  => 'admin',
                         ]
 
                     ]
@@ -108,6 +99,12 @@ class AppServiceProvider extends ServiceProvider
                     'text' => 'Ubah Password',
                     'route' => 'change_pass',
                     'icon' => 'fas fa-fw fa-lock'
+                ],
+                [
+                    'text' => 'Profil Klub',
+                    'route' => 'profile',
+                    'icon' => 'fas fa-fw fa-user',
+                    'can'  => 'club'
                 ]
 
             );

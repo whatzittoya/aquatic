@@ -73,7 +73,7 @@
                           </v-col>
                         <v-col cols="12" sm="12" md="6" v-else>
                           <b>Validasi :</b>
-                          <div v-if="form.valid">validation
+                          <div v-if="form.valid">Validation
                               <v-chip class="ma-2" color="green" text-color="white" label> Valid </v-chip>
                           </div>
                           <div v-else>

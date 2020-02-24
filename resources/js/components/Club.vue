@@ -54,14 +54,17 @@
                               :rules="[rules.required]"></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="12" md="6">
-                            <v-text-field ref="email" v-model="form.email" label="Email" :rules="emailRules">
+                            <v-text-field ref="email" v-model="form.email" label="Email" :rules="emailRules" :error-messages="formerrors.email">
                             </v-text-field>
                           </v-col>
                           <v-col cols="12" sm="12" md="6">
                             <v-text-field ref="pic" v-model="form.pic" label="PIC" :rules="[rules.required]">
                             </v-text-field>
                           </v-col>
-
+                           <v-col cols="12" sm="12" md="6">
+                            <v-text-field ref="phone_number" v-model="form.phone_number" label="Nomor HP" :rules="[rules.required]">
+                            </v-text-field>
+                          </v-col>
                           <v-col cols="12" sm="12" md="6">
                             <v-select :items="validation" label="Validasi" v-model="form.valid"></v-select>
                           </v-col>
@@ -127,7 +130,9 @@ export default {
         address: this.form.address,
         city: this.form.city,
         province: this.form.province,
-        pic: this.form.pic
+        email: this.form.email,
+        pic: this.form.pic,
+        phone_number: this.form.phone_number
       };
     }
   },
@@ -159,14 +164,18 @@ export default {
       form: {},
       defaultForm: {},
       validation: [
-        { text: "Tidak Valid", value: 0 },
-        { text: "Valid", value: 1 }
+        { text: "Tidak Valid", value: "0" },
+        { text: "Valid", value: "1" }
       ],
       edit: false,
       search: "",
       id: 0,
       dialog: false,
-      formHasErrors: false
+      formHasErrors: false,
+
+      formerrors: {
+        email: ""
+      }
     };
   },
   created() {
@@ -188,6 +197,7 @@ export default {
         province: "",
         pic: "",
         email: "",
+        phone_number: "",
         valid: 0
       };
       this.form = this.defaultForm;
@@ -234,21 +244,32 @@ export default {
               this.loadData();
               this.isLoading = false;
               this.close();
+            })
+            .catch(errors => {
+              this.isLoading = false;
+              this.formerrors.email = errors.response.data.errors.email;
             });
         } else {
           this.isLoading = true;
-          axios.post("/api/clubs", this.form).then(response => {
-            // push router ke read data
-            this.loadData();
-            this.isLoading = false;
-            this.close();
-          });
+          axios
+            .post("/api/clubs", this.form)
+            .then(response => {
+              // push router ke read data
+              this.loadData();
+              this.isLoading = false;
+              this.close();
+            })
+            .catch(errors => {
+              this.isLoading = false;
+              this.formerrors.email = errors.response.data.errors.email;
+            });
         }
         this.$parent.showModal = false;
       }
     },
     close() {
       this.dialog = false;
+      this.formerrors.email = "";
       setTimeout(() => {
         this.form = Object.assign({}, this.defaultForm);
         this.edit = false;

@@ -54,4 +54,8 @@ class User extends Authenticatable
     {
         return $this->roles()->select('name')->first();
     }
+    public function club()
+    {
+        return $this->hasOne('App\Club', 'user_id');
+    }
 }

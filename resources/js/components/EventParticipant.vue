@@ -20,7 +20,7 @@
                             <v-spacer></v-spacer>
                             <v-dialog v-model="dialog" max-width="500px">
                                 <template v-slot:activator="{ on }">
-                                    <v-btn color="primary" dark class="mb-2" v-on="on">Tambah Peserta</v-btn>
+                                    <v-btn color="primary" dark class="mb-2" v-on="on" :disabled="id=='all' || locked">Tambah Peserta</v-btn>
                                 </template>
                                 <v-card>
                                     <v-form @keyup.native.enter="save">
@@ -39,7 +39,7 @@
                                                     </v-col>
                                                    
                                              <v-col cols="12" sm="12" md="6">
-                                 <v-select v-model="form.member" :items="form.club.members"
+                                 <v-select v-model="form.member" :items="members"
                                                             item-text="name" item-value="id" label="Member"
                                                            return-object="" ></v-select>
                                                     </v-col>  
@@ -84,9 +84,21 @@
                                                         </v-text-field>
                                                     </v-col>  
                                                     
-                                                    <v-col cols="12" sm="12" md="6">
+                                                    <v-col cols="12" sm="12" md="6" v-if="role == 'admin'">
                                                         <v-select v-model="form.valid_payment" :items="payment" label="Pembayaran"></v-select>
                                                     </v-col>
+                       
+                        <v-col cols="12" sm="12" md="6" v-else>
+                          <b>Validasi Pembayaran :</b>
+                          <div v-if="form.valid_payment">Validation
+                              <v-chip class="ma-2" color="green" text-color="white" label> Valid </v-chip>
+                          </div>
+                          <div v-else>
+                            <v-chip class="ma-2" color="red" text-color="white" label> Tidak Valid </v-chip>
+                          </div>
+
+                            
+                          </v-col>
                                                 </v-row>
                                             </v-container>
                                         </v-card-text>
@@ -110,7 +122,7 @@
           <template v-slot:item.valid_payment="{ item }">
               {{item.valid_payment==1?'Valid':'Tidak Valid'}}
           </template>
-                    <template v-slot:item.action="{ item }">
+                    <template v-slot:item.action="{ item }" v-if="!locked">
                         <v-icon small class="mr-2" @click="editData(item)">
                             edit
                         </v-icon>
@@ -175,6 +187,18 @@ export default {
         +second[0] * 1000 +
         second[1] * 1;
       return milisecond;
+    },
+    locked() {
+      var id = this.event;
+      try {
+        let e = this.events.filter(function(event) {
+          return event.id == id;
+        });
+
+        return e[0].lock != 1 ? true : false;
+      } catch (error) {
+        return 0;
+      }
     }
   },
 
@@ -208,6 +232,7 @@ export default {
       event: "",
       races: [],
       clubs: [],
+      members: [],
       race_selected: [],
       payment: [
         { text: "Tidak Valid", value: 0 },
@@ -225,7 +250,7 @@ export default {
       search: "",
       dialog: false,
       formHasErrors: false,
-
+      role: "",
       ruletext: ""
     };
   },
@@ -236,6 +261,11 @@ export default {
 
   methods: {
     loadData() {
+      axios.get("/api/role").then(response => {
+        // mengirim data hasil fetch ke varibale array persons
+        this.role = response.data.name;
+        // console.log(response.data);
+      });
       this.defaultForm = {
         old_event: "",
         old_race: "",
@@ -263,11 +293,13 @@ export default {
 
       axios.get("/api/events").then(response => {
         this.events = response.data;
-        var id = this.id;
-        var selected_event = this.events.filter(function(event) {
-          return event.id == id;
-        });
-        this.form.event = selected_event[0].name;
+        if (this.id > 0) {
+          var id = this.id;
+          var selected_event = this.events.filter(function(event) {
+            return event.id == id;
+          });
+          this.form.event = selected_event[0].name;
+        }
       });
     },
     deleteData(id) {
@@ -280,7 +312,18 @@ export default {
     },
     editData(item) {
       // delete data
-      this.form = Object.assign({}, item);
+      this.form.id = item.id;
+      this.form.club = item.club;
+      this.form.member = item.member;
+      this.form.gender = item.member.gender;
+      this.born_date = item.member.born_date;
+      this.form.age = this.age;
+      this.form.old_event = item.old_event;
+      this.form.old_race = item.old_race;
+      this.form.old_best_time = this.timeFormat(item.old_best_time);
+      this.form.race = item.race;
+      this.form.valid_payment = item.valid_payment;
+
       this.edit = true;
       this.dialog = true;
     },
@@ -366,25 +409,60 @@ export default {
     dialog(val) {
       val || this.close();
     },
+    "form.club"(val) {
+      if (this.id > 0) {
+        var id = this.id;
+        axios
+          .get("/api/events/participants/members/" + id + "/" + val.id)
+          .then(response => {
+            this.members = response.data;
+            if (!this.edit) {
+              this.form.member = this.members[0];
+            }
+          });
+      }
+    },
     "form.member"(val) {
-      this.born_date = val.born_date;
-      this.gender = val.gender;
-      var id = this.id;
-      axios
-        .get("/api/events/participants/races/" + id + "/" + val.id)
-        .then(response => {
-          this.races = response.data;
-          this.form.race = this.races[0];
-        });
+      if (this.id > 0 && val) {
+        this.born_date = val.born_date;
+        this.gender = val.gender;
+        var id = this.id;
+        if (!this.edit) {
+          axios
+            .get("/api/events/participants/races/" + id + "/" + val.id)
+            .then(response => {
+              this.races = response.data;
+
+              this.form.race = this.races[0];
+            });
+        } else {
+          axios
+            .get(
+              "/api/events/participants/races/" +
+                id +
+                "/" +
+                val.id +
+                "/" +
+                this.form.id
+            )
+            .then(response => {
+              this.races = response.data;
+            });
+        }
+      }
     },
     "form.race"(val) {
-      var rules = val.rules;
-      var age = this.age;
-      var rule = val.rules.filter(function(rule) {
-        return rule.min_age <= age && rule.max_age >= age;
-      });
-      this.form.rule = rule[0].name;
-      this.form.rule_id = rule[0].id;
+      console.log(val);
+      try {
+        var rules = val.rules;
+        var age = this.age;
+
+        var rule = val.rules.filter(function(rule) {
+          return rule.min_age <= age && rule.max_age >= age;
+        });
+        this.form.rule = rule[0].name;
+        this.form.rule_id = rule[0].id;
+      } catch (error) {}
     },
     event(val) {
       if (val.id > 0) {

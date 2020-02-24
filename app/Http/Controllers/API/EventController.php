@@ -20,6 +20,12 @@ class EventController extends Controller
 
         return response()->json($events);
     }
+    public function showLock()
+    {
+        $events = Event::where('lock', 1)->get();
+
+        return response()->json($events);
+    }
 
     /**
      * Store a newly created resource in storage.

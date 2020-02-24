@@ -55,7 +55,15 @@ class EventParticipantController extends Controller
      */
     public function show($id)
     {
-        $participant = Participant::with('member:id,name,gender', 'club:id,name', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'rule:id,name')->where('event_id', $id)->get();
+
+        if (Auth::user()->isAdmin()) {
+            $participant = Participant::with('member:id,name,gender,born_date', 'club:id,name', 'club.members', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'race.rules', 'rule:id,name')->where('event_id', $id)->get();
+        } else {
+            $participant = Participant::with('member:id,name,gender,born_date', 'club:id,name',  'club.members', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'race.rules', 'rule:id,name')->whereHas('club', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            })->where('event_id', $id)->get();
+        }
+
         return response()->json($participant);
     }
 
@@ -69,7 +77,14 @@ class EventParticipantController extends Controller
         }
         return response()->json($club)->setEncodingOptions(JSON_NUMERIC_CHECK);
     }
-    public function getRace($id, $member_id)
+
+    public function getMember($id, $club_id)
+    {
+
+        $member = Member::where('club_id', $club_id)->get();
+        return response()->json($member);
+    }
+    public function getRace($id, $member_id, $participant_id = null)
     {
         $member = Member::find($member_id);
         $bday = new DateTime($member->born_date); // Your date of birth
@@ -82,6 +97,12 @@ class EventParticipantController extends Controller
         })->select('id', 'pure_race_id')->whereNotIn('id', function ($query) use ($member_id, $id) {
             $query->select('race_id')->from('participants')->where('member_id', $member_id)->where('event_id', $id)->where('deleted_at', null);
         })->get();
+        if ($participant_id > 0) {
+            $participant = Participant::find($participant_id);
+            $current_race = EventRace::with('pureRaces:name,id', 'rules:rules.id,name,min_age,max_age')->where('id', $participant->race_id)->select('id', 'pure_race_id')->first();
+            $race->push($current_race);
+        }
+
         return response()->json($race);
     }
 
@@ -94,7 +115,21 @@ class EventParticipantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->data;
+        $participant = Participant::find($id);
+        $participant->old_event = $data['old_event'];
+        $participant->old_race = $data['old_race'];
+        $participant->old_best_time = $data['o_best_time'];
+        // $participant->join_date = date("Y-m-d");
+
+        $participant->club_id = $data['club']['id'];
+        $participant->member_id = $data['member']['id'];
+        $participant->race_id = $data['race']['id'];
+        $participant->event_id = $data['event_id'];
+        $participant->category_rule_id = $data['rule_id'];
+        $participant->valid_payment = $data['valid_payment'];
+
+        $participant->update();
     }
 
     /**

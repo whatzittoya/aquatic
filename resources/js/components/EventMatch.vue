@@ -182,7 +182,7 @@ export default {
   methods: {
     loadData() {
       // fetch data dari api menggunakan axios
-      axios.get("/api/events").then(response => {
+      axios.get("/api/events/showlock").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.events = response.data;
         // console.log(response.data);

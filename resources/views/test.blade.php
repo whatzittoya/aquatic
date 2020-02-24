@@ -8,6 +8,7 @@
     Publish an event to channel <code>my-channel</code>
     with event name <code>my-event</code>; it will appear below:
   </p>
+ 
   <div id="app">
     <ul>
       <li v-for="message in messages">
