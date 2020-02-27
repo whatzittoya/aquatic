@@ -86,7 +86,7 @@ export default {
 
       let second = time[2].split(".");
       var ms = 0;
-      if ((second.length = 1)) {
+      if (second.length == 1) {
         ms = 0;
       } else if (second.length > 1) {
         ms = second[1];
