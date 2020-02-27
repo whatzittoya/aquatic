@@ -129,6 +129,7 @@ export default {
 
         return e[0].lock;
       } catch (error) {
+        // return 1;
         return 1;
       }
     }

@@ -93,6 +93,13 @@ class AppServiceProvider extends ServiceProvider
 
                     ]
                 ],
+
+                [
+                    'text' => 'Starting List',
+                    'route'       => 'starting_list',
+                    'icon' => 'far fa-fw fa-file',
+                    'can'  => 'admin',
+                ],
                 'ACCOUNT SETTINGS',
 
                 [

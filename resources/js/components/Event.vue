@@ -104,7 +104,7 @@
                         <v-btn small block color="success" dark  :to="'/admin/event/participants/'+ item.id">{{event_action_text(item.lock,1)}} </v-btn>
                     </template>
                         <template v-slot:item.match="{ item }">
-                        <v-btn small block color="warning" dark  :to="'/admin/event/matches/'+ item.id">{{event_action_text(item.lock,2)}} </v-btn>
+                        <v-btn small block color="warning" dark @click="generateMatch(item.id)"  >{{event_action_text(item.lock,2)}} </v-btn>
                     </template>
                     <template v-slot:item.action="{ item }">
                         <v-icon small class="mr-2" @click="editData(item)">
@@ -282,6 +282,12 @@ export default {
             return "Generate";
         }
       }
+    },
+    generateMatch(id) {
+      axios.get("/api/events/generatematch/" + id, this.form).then(response => {
+        console.log(response.data);
+        this.$router.push("/admin/event/matches/" + id);
+      });
     }
   },
   watch: {

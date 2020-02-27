@@ -22,6 +22,10 @@ class EventRace extends Model
 
     public function participants()
     {
-        return $this->hasMany('App\Participant', 'race_id')->where('series', '>', 0)->where('valid_payment', 1)->select('id', 'club_id', 'race_id', 'event_id', 'member_id', 'best_time', 'line_number', 'series', 'result')->orderBy('series', 'asc')->orderBy('line_number', 'asc');
+        return $this->hasMany('App\Participant', 'race_id')->where('series', '>', 0)->where('valid_payment', 1)->select('id', 'club_id', 'race_id', 'event_id', 'member_id', 'best_time', 'line_number', 'series', 'result', 'category_rule_id')->orderBy('series', 'asc')->orderBy('line_number', 'asc');
+    }
+    public function participantsResult()
+    {
+        return $this->hasMany('App\Participant', 'race_id')->where('series', '>', 0)->where('valid_payment', 1)->select('id', 'club_id', 'race_id', 'event_id', 'member_id', 'best_time', 'line_number', 'series', 'result', 'category_rule_id')->orderBy('best_time', 'asc');
     }
 }

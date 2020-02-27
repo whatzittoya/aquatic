@@ -6,6 +6,7 @@ use App\Event;
 use App\EventRace;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
@@ -22,7 +23,7 @@ class EventController extends Controller
     }
     public function showLock()
     {
-        $events = Event::where('lock', 1)->get();
+        $events = Event::get();
 
         return response()->json($events);
     }
@@ -58,6 +59,12 @@ class EventController extends Controller
     public function show(Event $event)
     {
         //
+    }
+
+    public function generateMatch($id)
+    {
+        $data = DB::select('call prc_swm_gen_matches(?)', [$id]);
+        return response()->json($data);
     }
 
     /**

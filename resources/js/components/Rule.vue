@@ -8,6 +8,7 @@
                     Rule
                     <v-spacer></v-spacer>
                 </v-card-title>
+                
                 <v-data-table :headers="headers" :items="rules" class="elevation-1" :search="search">
                     <template v-slot:top>
                         <v-toolbar flat color="white">

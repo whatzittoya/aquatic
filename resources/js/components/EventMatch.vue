@@ -13,6 +13,7 @@
                      item-text="name" item-value="id" label="Pilih Event" return-object=""></v-select>
                      <h3>{{matches.name}}</h3>
                      <div v-for="match in matches.races">
+                       <div v-if="match.participants.length>0">
                           <v-row no-gutters>
                             <v-col cols="6" xs="6" sm="6" md="2" >
                              <p class="font-weight-regular">No Lomba</p>
@@ -35,7 +36,7 @@
                             <v-col cols="6" xs="6"  sm="6" md="4">
                              <p class="font-weight-bold">{{match.gender}}</p>
                          </v-col>
-                              <div v-for="serie in countSeries(match.participants)" v-bind:key="serie ">
+                              <div v-for="serie in countSeries(match.participants)" >
                                   <h5>Seri {{serie}}</h5>
                        <v-data-table :headers="headers" :items="filterSeries(match.participants,serie)" class="elevation-1" :search="search">
         <template v-slot:item.best_time="{ item }">
@@ -52,6 +53,7 @@
                               </div>
                        </v-row>
                        <v-divider></v-divider>
+                       </div>
                      </div>
                      
              <v-dialog v-model="dialog" max-width="500px">
@@ -68,10 +70,7 @@
                                             <v-container>
                                                 <v-row>
 
-                                                    <v-col cols="12" sm="12" md="6">
-                                                        <v-text-field ref="result" v-model="form.result" label="Hasil"
-                                                            :rules="[rules.required]"></v-text-field>
-                                                    </v-col>
+                                               
                                                     <v-col cols="12" sm="12" md="6">
                                                         <v-text-field ref="best_time" v-model="form.best_time"
                                                             label="Best Time" type="time"  step="0.001" >
@@ -118,7 +117,6 @@ export default {
     },
     formtest() {
       return {
-        result: this.form.result,
         best_time: this.form.best_time
       };
     },
@@ -130,12 +128,17 @@ export default {
       }
 
       let second = time[2].split(".");
-
+      var ms = 0;
+      if ((second.length = 1)) {
+        ms = 0;
+      } else if (second.length > 1) {
+        ms = second[1];
+      }
       var milisecond =
         +time[0] * 60 * 60 * 1000 +
         +time[1] * 60 * 1000 +
         +second[0] * 1000 +
-        second[1] * 1;
+        ms * 1;
       return milisecond;
     }
   },
@@ -153,9 +156,9 @@ export default {
         { text: "Klub", value: "club.name" },
         { text: "Kota", value: "club.city" },
         { text: "Seri", value: "series" },
+        { text: "Kategori", value: "rule.name" },
         { text: "Line Number", value: "line_number" },
         { text: "Best Time", value: "best_time" },
-        { text: "Hasil", value: "result" },
         { text: "Aksi", value: "action", sortable: false }
       ],
       event: [],
@@ -194,8 +197,7 @@ export default {
         this.event = parseInt(this.id);
       }
       this.defaultForm = {
-        best_time: "00.00.00,000",
-        result: ""
+        best_time: "00.00.00,000"
       };
       this.form = this.defaultForm;
     },
@@ -210,7 +212,7 @@ export default {
     editData(item) {
       // delete data
       this.form.best_time = this.timeFormat(item.best_time);
-      this.form.result = item.result;
+
       this.form.id = item.id;
       this.edit = true;
       this.dialog = true;

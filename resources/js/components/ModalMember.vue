@@ -47,12 +47,7 @@
       <input type="date" class="form-control" name="tanggal_lahir" v-model="form.born_date">
     </div>
   </div>
-    <div class="form-group row">
-    <label for="Waktu" class="col-sm-2 col-form-label" >Waktu Tercepat</label>
-    <div class="col-sm-10">
-      <input type="time" class="form-control" name="waktu" id="waktu" v-model="form.best_time" step="0.001" >
-    </div>
-  </div>
+ 
     <!-- <div class="form-group row">
     <label for="Dokumen" class="col-sm-2 col-form-label">Dokumen</label>
     <div class="col-sm-10">
@@ -126,7 +121,6 @@ export default {
         club: "1",
         name: "",
         born_date: "",
-        best_time: "",
         document: "",
         valid: "0"
       }
@@ -141,7 +135,6 @@ export default {
         this.form = response.data;
         this.form.club = this.form.clubs.id;
         this.form.email = this.form.users.email;
-        this.form.best_time = this.$parent.timeFormat(this.form.best_time);
       });
     } else {
       this.form = {};
@@ -171,7 +164,6 @@ export default {
       formData.append("club_id", this.form.club);
       formData.append("name", this.form.name);
       formData.append("born_date", this.form.born_date);
-      formData.append("best_time", this.timeToInt);
       formData.append("document", this.form.document);
       formData.append("valid", this.form.valid);
 
@@ -194,7 +186,6 @@ export default {
       formData.append("club_id", this.form.club);
       formData.append("name", this.form.name);
       formData.append("born_date", this.form.born_date);
-      formData.append("best_time", this.timeToInt);
       formData.append("valid", this.form.valid);
       formData.append("email", this.form.email);
       axios.post("/api/members", formData, config).then(response => {
@@ -206,18 +197,6 @@ export default {
   },
   computed: {
     // a computed getter
-    timeToInt: function() {
-      // `this` points to the vm instance
-      let time = this.form.best_time.split(":");
-      let second = time[2].split(".");
-
-      var milisecond =
-        +time[0] * 60 * 60 * 1000 +
-        +time[1] * 60 * 1000 +
-        +second[0] * 1000 +
-        second[1] * 1;
-      return milisecond;
-    }
   }
 };
 </script>

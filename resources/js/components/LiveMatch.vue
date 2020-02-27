@@ -13,7 +13,8 @@
                      item-text="name" item-value="id" label="Pilih Event" return-object=""></v-select>
                      <h3>{{matches.name}}</h3>
                      <div v-for="match in matches.races">
-                          <v-row no-gutters>
+                       <div v-if="match.participants_result.length>0">
+                          <v-row no-gutters >
                             <v-col cols="6" xs="6" sm="6" md="2" >
                              <p class="font-weight-regular">No Lomba</p>
                          </v-col>
@@ -35,20 +36,21 @@
                             <v-col cols="6" xs="6"  sm="6" md="4">
                              <p class="font-weight-bold">{{match.gender}}</p>
                          </v-col>
-                              <div v-for="serie in countSeries(match.participants)" v-bind:key="serie ">
-                                  <h5>Seri {{serie}}</h5>
-                       <v-data-table :headers="headers" :items="filterSeries(match.participants,serie)" class="elevation-1" :search="search">
+                              <div v-for="rule in match.rules">
+                                 <div v-if="countParticipantRule(match.participants_result,rule.id)>0">
+                                  <h5>Kategori {{rule.name}}</h5>
+                       <v-data-table :headers="headers" :items="filterRule(match.participants_result,rule.id)" class="elevation-1" :search="search">
         <template v-slot:item.best_time="{ item }">
             {{ timeFormat(item.best_time) }}
           </template>
   
                        </v-data-table>
-                    
+                                 </div>
                               </div>
                        </v-row>
                        <v-divider></v-divider>
                      </div>
-                     
+                     </div>
             </div>
         </div>
           
@@ -83,13 +85,17 @@ export default {
       }
 
       let second = time[2].split(".");
-
+      var ms = 0;
+      if ((second.length = 1)) {
+        ms = 0;
+      } else if (second.length > 1) {
+        ms = second[1];
+      }
       var milisecond =
         +time[0] * 60 * 60 * 1000 +
         +time[1] * 60 * 1000 +
         +second[0] * 1000 +
-        second[1] * 1;
-      return milisecond;
+        ms * 1;
     }
   },
   data() {
@@ -151,7 +157,7 @@ export default {
         // console.log(response.data);
       });
       if (this.id > 0) {
-        axios.get("/api/events/matches/" + this.id).then(response => {
+        axios.get("/api/liveresult/" + this.id).then(response => {
           this.matches = response.data;
         });
         this.event = parseInt(this.id);
@@ -249,10 +255,14 @@ export default {
       let unique = [...new Set(participants.map(item => item.series))];
       return unique;
     },
-    filterSeries(participants, serie) {
+    filterRule(participants, rule_id) {
       return participants.filter(function(p) {
-        return p.series == serie;
+        return p.category_rule_id == rule_id;
       });
+    },
+    countParticipantRule(participants, rule_id) {
+      let p = this.filterRule(participants, rule_id);
+      return p.length;
     }
   },
   watch: {

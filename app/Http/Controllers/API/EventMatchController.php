@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Participant;
 use App\Events\MyEvent;
+use Illuminate\Support\Facades\DB;
 
 class EventMatchController extends Controller
 {
@@ -39,7 +40,7 @@ class EventMatchController extends Controller
      */
     public function show($id)
     {
-        $event = Event::with('races.pureRaces')->with('races.participants')->with('races.participants.member:id,name,born_date', 'races.participants.club:id,name,city')->select('id', 'name')->where('lock', 1)->find($id);
+        $event = Event::with('races.pureRaces')->with('races.participants')->with('races.participants.member:id,name,born_date', 'races.participants.club:id,name,city', 'races.participants.rule')->select('id', 'name')->find($id);
 
         return response()->json($event);
     }
@@ -56,10 +57,12 @@ class EventMatchController extends Controller
         $data = $request->data;
         $participant = Participant::find($id);
         $participant->best_time = $data['int_best_time'];
-        $participant->result = $data['result'];
-
         $participant->update();
-        broadcast(new MyEvent($participant));
+
+        $datadone = DB::select('call prc_set_rank_ku(?,?,?)', [$participant->event_id, $participant->race_id, $participant->category_rule_id]);
+        return response()->json($data);
+
+        // broadcast(new MyEvent($participant));
     }
 
     /**

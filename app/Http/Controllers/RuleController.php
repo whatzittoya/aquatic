@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Events\MyEvent;
 use App\Rule;
+use Illuminate\Support\Facades\DB;
 
 class RuleController extends Controller
 {
@@ -31,9 +32,11 @@ class RuleController extends Controller
     }
     public function test($msg)
     {
-        $rule = Rule::get();
-        broadcast(new MyEvent($rule));
-        return response()->json($rule);
+        $data = DB::select('call prc_get_last_record(1,1)');
+        return response()->json($data);
+        // $rule = Rule::get();
+        // broadcast(new MyEvent($rule));
+        // return response()->json($rule);
     }
     /**
      * Display the specified resource.

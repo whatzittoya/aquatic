@@ -9,11 +9,18 @@ import Axios from 'axios';
 import VueInputMask from 'vue-inputmask';
 import Vuetify from 'Vuetify';
 import "vuetify/dist/vuetify.min.css";
+import tinymce from 'tinymce';
+
+
+
+
 
 
 Vue.use(VueRouter, VueAxios, Axios);
 Vue.use(VueInputMask.default);
 Vue.use(Vuetify);
+Vue.use(tinymce);
+
 
 
 // import file yang dibuat tadi
@@ -29,6 +36,7 @@ import Participant from './components/Participant.vue';
 import PureRace from './components/PureRace.vue';
 import EventMatch from './components/EventMatch.vue';
 import LiveMatch from './components/LiveMatch.vue';
+import StartingList from './components/StartingList.vue';
 
 // membuat router
 const routes = [
@@ -82,6 +90,11 @@ const routes = [
         name: 'manage LiveMatch',
         path: '/admin/home/:id',
         component: LiveMatch,
+    },
+    {
+        name: 'manage StartingList',
+        path: '/admin/startinglist',
+        component: StartingList,
     }
 
 ]

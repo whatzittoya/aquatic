@@ -10,6 +10,7 @@ use App\Participant;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class EventParticipantController extends Controller
 {
@@ -40,6 +41,7 @@ class EventParticipantController extends Controller
         $participant->club_id = $request->club['id'];
         $participant->member_id = $request->member['id'];
         $participant->race_id = $request->race['id'];
+        $participant->pure_race_id = $request->race['pure_race_id'];
         $participant->event_id = $request->event_id;
         $participant->category_rule_id = $request->rule_id;
         $participant->valid_payment = $request->valid_payment;
@@ -106,6 +108,12 @@ class EventParticipantController extends Controller
         return response()->json($race);
     }
 
+
+    public function getLastRecord($member_id, $pure_race_id)
+    {
+        $data = DB::select('call prc_get_last_record(?,?)', [$member_id, $pure_race_id]);
+        return response()->json($data);
+    }
     /**
      * Update the specified resource in storage.
      *

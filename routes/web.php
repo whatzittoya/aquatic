@@ -56,6 +56,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     ]);
     Route::resource('/passwords/change', 'ChangePassController')->names(['index' => 'change_pass']);
     Route::resource('/profile', 'ProfileController')->names(['index' => 'profile', 'store' => 'u_profile']);
+    Route::get('/startinglist', function () {
+        return view('admin.startingList');
+    })->name('starting_list');
+
+    Route::get('/startinglist/export_excel/{id}', 'StartingListController@export_excel');
 });
 
 Route::get('/{url}', function ($url) {

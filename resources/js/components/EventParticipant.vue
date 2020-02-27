@@ -43,6 +43,11 @@
                                                             item-text="name" item-value="id" label="Member"
                                                            return-object="" ></v-select>
                                                     </v-col>  
+                                                    <v-col cols="12" sm="12" md="6">
+                                 <v-select v-model="form.race" :items="races"
+                                                            item-text="pure_races.name" item-value="id" label="Lomba" return-object=""
+                                                            ></v-select>
+                                                    </v-col> 
                                                       <v-col cols="12" sm="12" md="6">
                                                         <v-text-field v-model="gender" label="Gender" disabled=""
                                                             >
@@ -73,11 +78,7 @@
                                                             label="Event" disabled="">
                                                         </v-text-field>
                                                     </v-col>
-                                                      <v-col cols="12" sm="12" md="6">
-                                 <v-select v-model="form.race" :items="races"
-                                                            item-text="pure_races.name" item-value="id" label="Lomba" return-object=""
-                                                            ></v-select>
-                                                    </v-col> 
+                                                      
                                                       <v-col cols="12" sm="12" md="6">
                                                         <v-text-field v-model="form.rule"
                                                             label="Kategori" disabled="">
@@ -181,12 +182,17 @@ export default {
 
       let second = time[2].split(".");
 
+      var ms = 0;
+      if ((second.length = 1)) {
+        ms = 0;
+      } else if (second.length > 1) {
+        ms = second[1];
+      }
       var milisecond =
         +time[0] * 60 * 60 * 1000 +
         +time[1] * 60 * 1000 +
         +second[0] * 1000 +
-        second[1] * 1;
-      return milisecond;
+        ms * 1;
     },
     locked() {
       var id = this.event;
@@ -462,6 +468,26 @@ export default {
         });
         this.form.rule = rule[0].name;
         this.form.rule_id = rule[0].id;
+
+        axios
+          .get(
+            "/api/events/participants/lastrecord/" +
+              this.form.member.id +
+              "/" +
+              1
+          )
+          .then(response => {
+            let res = response.data;
+            if (res.length > 0) {
+              this.form.old_event = res[0].old_event;
+              this.form.old_race = res[0].old_race;
+              this.form.old_best_time = this.timeFormat(res[0].old_best_time);
+            } else {
+              this.form.old_event = "";
+              this.form.old_race = "";
+              this.form.old_best_time = "00:59:59.999";
+            }
+          });
       } catch (error) {}
     },
     event(val) {
