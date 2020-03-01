@@ -100,6 +100,12 @@ class AppServiceProvider extends ServiceProvider
                     'icon' => 'far fa-fw fa-file',
                     'can'  => 'admin',
                 ],
+                [
+                    'text' => 'Pembayaran',
+                    'route'       => 'payment',
+                    'icon' => 'far fa-fw fa-file',
+                    'can'  => 'manage-member',
+                ],
                 'ACCOUNT SETTINGS',
 
                 [

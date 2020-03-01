@@ -37,7 +37,7 @@
                       <v-container>
                         <v-row>
                           <v-col cols="12" sm="12" md="6">
-                            <v-select v-model="form.club" :items="clubs" item-text="name" item-value="id"></v-select>
+                            <v-select v-model="form.club" :items="clubs" item-text="name" item-value="id" label="Klub"></v-select>
 
                           </v-col>
                           <v-col cols="12" sm="12" md="6">
@@ -62,7 +62,7 @@
                               <v-col cols="12" sm="12" md="6">
                             <v-file-input label="Dokumen" accept="image/png, image/jpeg, image/bmp, application/pdf" v-model="form.file"
                               hint="(extension:jpg,jpeg,png,pdf max-size:500KB)" persistent-hint
-                              :error-messages="file_error_messages" ></v-file-input>
+                              :error-messages="file_error_messages" :rules="[rules.required]"></v-file-input>
                                </v-col>
 						<v-col cols="12" sm="12" md="6">
                             <v-select :items="genderList" label="Gender" v-model="form.gender"></v-select>

@@ -33,6 +33,16 @@ class ClubController extends Controller
 
         return response()->json($club);
     }
+    public function indexValid()
+    {
+        if (Auth::user()->isAdmin()) {
+            $club = Club::orderBy('name')->with('users:id,email')->where('valid', 1)->get();
+        } else {
+            $club = Club::orderBy('name')->where('user_id', Auth::user()->id)->where('valid', 1)->with('users:id,email')->get();
+        }
+
+        return response()->json($club);
+    }
 
     /**
      * Store a newly created resource in storage.

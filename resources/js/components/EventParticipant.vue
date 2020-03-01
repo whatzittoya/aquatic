@@ -85,13 +85,11 @@
                                                         </v-text-field>
                                                     </v-col>  
                                                     
-                                                    <v-col cols="12" sm="12" md="6" v-if="role == 'admin'">
-                                                        <v-select v-model="form.valid_payment" :items="payment" label="Pembayaran"></v-select>
-                                                    </v-col>
+                                                 
                        
-                        <v-col cols="12" sm="12" md="6" v-else>
+                        <v-col cols="12" sm="12" md="6" >
                           <b>Validasi Pembayaran :</b>
-                          <div v-if="form.valid_payment">Validation
+                          <div v-if="form.valid_payment">
                               <v-chip class="ma-2" color="green" text-color="white" label> Valid </v-chip>
                           </div>
                           <div v-else>

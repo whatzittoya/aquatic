@@ -37,6 +37,7 @@ import PureRace from './components/PureRace.vue';
 import EventMatch from './components/EventMatch.vue';
 import LiveMatch from './components/LiveMatch.vue';
 import StartingList from './components/StartingList.vue';
+import Payment from './components/Payment.vue';
 
 // membuat router
 const routes = [
@@ -95,7 +96,13 @@ const routes = [
         name: 'manage StartingList',
         path: '/admin/startinglist',
         component: StartingList,
+    },
+    {
+        name: 'manage Payment',
+        path: '/admin/payments',
+        component: Payment,
     }
+
 
 ]
 

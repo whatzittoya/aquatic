@@ -134,7 +134,7 @@ class RegistrationController extends Controller
             $club->save();
             $objUser = new \stdClass();
             try {
-                Mail::to($user->email)->cc(explode(',', env("MAIL_CC", "")))->bcc(explode(",", env("MAIL_BCC", "")))->send(new UserValidated($objUser));
+                Mail::to($user->email)->cc(explode(',', env("MAIL_CC", "")))->bcc(explode(",", env("MAIL_BCC", "")))->send(new UserRegistered($objUser));
             } catch (Exception $ex) {
 
                 $error = new ErrorLog;

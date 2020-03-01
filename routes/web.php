@@ -61,6 +61,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     })->name('starting_list');
 
     Route::get('/startinglist/export_excel/{id}', 'StartingListController@export_excel');
+
+
+    Route::resource('payments', 'PaymentController')->names([
+        'index' => 'payment'
+    ]);
 });
 
 Route::get('/{url}', function ($url) {

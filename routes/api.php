@@ -23,6 +23,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('members/updateapi/{id}', 'API\MemberController@updateApi')->name('events');
     Route::apiResource('members', 'API\MemberController');
 
+    Route::get('clubs/valid', 'API\ClubController@indexValid');
     Route::apiResource('clubs', 'API\ClubController');
 
     Route::get('events/generatematch/{event_id}', 'API\EventController@generateMatch');
@@ -48,8 +49,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::apiResource('events/matches', 'API\EventMatchController');
 
-
-
+    Route::post('payments/updateapi/{id}', 'API\PaymentController@updateApi');
+    Route::apiResource('payments', 'API\PaymentController');
 
     Route::get('/role', function () {
         return response()->json(Auth::user()->getRole());
@@ -57,6 +58,7 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::apiResource('liveresult', 'API\LiveResultController');
+
 
 
 
