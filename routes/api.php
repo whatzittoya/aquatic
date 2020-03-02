@@ -27,6 +27,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('clubs', 'API\ClubController');
 
     Route::get('events/generatematch/{event_id}', 'API\EventController@generateMatch');
+    Route::get('events/showcurrent', 'API\EventController@showCurrentEvent');
     Route::get('events/showlock', 'API\EventController@showLock');
     Route::apiResource('events', 'API\EventController');
 

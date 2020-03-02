@@ -26,13 +26,15 @@ Route::resource('register', 'RegistrationController')->names([
 ]);
 Route::get('email/{id}', 'RegistrationController@email');
 
+
+Route::get('/match', function () {
+    return view('matchResult');
+})->name('match_result');
 Route::middleware('auth')->prefix('admin')->group(function () {
+
     Route::get('/home', function () {
-        return view('home');
-    })->name('home');
-    Route::get('/home/{id}', function () {
         return view('admin.liveMatch');
-    })->name('livematch');
+    })->name('home');
     Route::get('events', 'EventController@index')->name('events');
     Route::get('event/races/{id}', function () {
         return view('admin.eventRace');

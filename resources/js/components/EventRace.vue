@@ -184,7 +184,7 @@ export default {
   created() {
     this.id = this.$route.params.id;
     this.loadData();
-    axios.get("/api/events").then(response => {
+    axios.get("/api/events/showcurrent").then(response => {
       this.events = response.data;
     });
     axios.get("/api/rules").then(response => {

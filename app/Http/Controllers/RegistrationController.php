@@ -102,6 +102,7 @@ class RegistrationController extends Controller
             'kota'       => 'required',
             'provinsi'       => 'required',
             'pic'       => 'required',
+            'phone_number'       => 'required',
             'email'       => 'required|email|unique:users',
         );
         $validator = Validator::make($request->all(), $rules);
@@ -128,6 +129,7 @@ class RegistrationController extends Controller
             $club->city       = $request->kota;
             $club->province       = $request->provinsi;
             $club->pic       = $request->pic;
+            $club->phone_number       = $request->phone_number;
             $club->valid       = 0;
 
             $club->user_id       = $user->id;

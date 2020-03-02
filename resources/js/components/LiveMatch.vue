@@ -113,7 +113,7 @@ export default {
         { text: "Kota", value: "club.city" },
         { text: "Seri", value: "series" },
         { text: "Line Number", value: "line_number" },
-        { text: "Best Time", value: "best_time" },
+        { text: "Time Result", value: "best_time" },
         { text: "Hasil", value: "result" }
       ],
       event: [],
@@ -129,11 +129,19 @@ export default {
       defaultForm: {},
       search: "",
       dialog: false,
-      formHasErrors: false
+      formHasErrors: false,
+      id: 0
     };
   },
   created() {
     this.id = this.$route.params.id;
+    axios.get("/api/events/showcurrent").then(response => {
+      // mengirim data hasil fetch ke varibale array persons
+      this.events = response.data;
+      if (!(this.id > 0)) {
+        this.event = this.events[this.events.length - 1];
+      }
+    });
     this.subscribe();
     this.loadData();
   },
@@ -151,11 +159,7 @@ export default {
     },
     loadData() {
       // fetch data dari api menggunakan axios
-      axios.get("/api/events").then(response => {
-        // mengirim data hasil fetch ke varibale array persons
-        this.events = response.data;
-        // console.log(response.data);
-      });
+
       if (this.id > 0) {
         axios.get("/api/liveresult/" + this.id).then(response => {
           this.matches = response.data;

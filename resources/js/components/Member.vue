@@ -60,9 +60,9 @@
                             </v-menu>
                           </v-col>
                               <v-col cols="12" sm="12" md="6">
-                            <v-file-input label="Dokumen" accept="image/png, image/jpeg, image/bmp, application/pdf" v-model="form.file"
+                            <v-file-input ref="file" label="Dokumen" accept="image/png, image/jpeg, image/bmp, application/pdf" v-model="form.file"
                               hint="(extension:jpg,jpeg,png,pdf max-size:500KB)" persistent-hint
-                              :error-messages="file_error_messages" :rules="[rules.required]"></v-file-input>
+                              :error-messages="file_error_messages" ></v-file-input>
                                </v-col>
 						<v-col cols="12" sm="12" md="6">
                             <v-select :items="genderList" label="Gender" v-model="form.gender"></v-select>
@@ -183,6 +183,7 @@ export default {
       edit: false,
       search: "",
       id: 0,
+      file_error_messages: null,
       showModal: false,
       dialog: false,
       formHasErrors: false,
@@ -280,20 +281,31 @@ export default {
             });
         } else {
           this.isLoading = true;
-          axios.post("/api/members", formData, config).then(response => {
-            // push router ke read data
-            this.loadData();
-            this.isLoading = false;
-            this.close();
-          });
+          axios
+            .post("/api/members", formData, config)
+            .then(response => {
+              // push router ke read data
+              this.loadData();
+              this.isLoading = false;
+              this.close();
+            })
+            .catch(errors => {
+              this.file_error_messages = errors.response.data.errors.file;
+              this.isLoading = false;
+            });
         }
       }
     },
     close() {
       this.dialog = false;
+      this.file_error_messages = null;
       setTimeout(() => {
         this.form = Object.assign({}, this.defaultForm);
         this.edit = false;
+        Object.keys(this.formtest).forEach(f => {
+          if (!this.formtest[f]) this.formHasErrors = true;
+          this.$refs[f].reset();
+        });
       }, 300);
     },
     timeFormat(milisecond) {

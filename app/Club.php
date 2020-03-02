@@ -13,7 +13,7 @@ class Club extends Model
     use SoftDeletes;
     public function members()
     {
-        return $this->hasMany('App\Member')->where('valid', 1);
+        return $this->hasMany('App\Member')->where('valid', 1)->withTrashed();
     }
     public function users()
     {

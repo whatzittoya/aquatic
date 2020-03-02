@@ -11,11 +11,11 @@ class Event extends Model
 
     public function races()
     {
-        return $this->hasMany('App\EventRace');
+        return $this->hasMany('App\EventRace')->withTrashed();
     }
 
     public function participants()
     {
-        return $this->hasMany('App\Participant');
+        return $this->hasMany('App\Participant')->withTrashed();
     }
 }

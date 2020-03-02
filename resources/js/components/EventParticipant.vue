@@ -295,7 +295,7 @@ export default {
           this.clubs = response.data;
         });
 
-      axios.get("/api/events").then(response => {
+      axios.get("/api/events/showcurrent").then(response => {
         this.events = response.data;
         if (this.id > 0) {
           var id = this.id;
@@ -472,7 +472,7 @@ export default {
             "/api/events/participants/lastrecord/" +
               this.form.member.id +
               "/" +
-              1
+              this.form.race.pure_race_id
           )
           .then(response => {
             let res = response.data;

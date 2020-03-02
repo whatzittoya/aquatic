@@ -29,15 +29,29 @@
     <thead>
     <tr>
         <th>No</th>
-        <th>Nomor Lomba</th>
-        <th>Nama member</th>
-        <th>Gender</th>
-        <th>Nama Lomba</th>
-        <th>Tahun Lahir</th>
-        <th>Nama Club</th>
+        <th>Nama Klub</th>
         <th>Kota</th>
         <th>Provinsi</th>
-        <th>Best Time</th>
+        <th>PIC</th>
+        <th>Nomor Telepon</th>
+        
+        <th>Nama member</th>
+        <th>Gender</th>
+        <th>Tanggal Lahir</th>
+        <th>Tahun Lahir</th>
+        <th>Event terakhir</th>
+        <th>Nomor Lomba Terakhir</th>
+        <th>Nama Lomba Terakhir</th>
+        <th>Event</th>
+        <th>Event Mulai</th>
+        <th>Event Selesai</th>
+        <th>Nomor Lomba</th>
+        <th>Nama Lomba</th>
+<th>Seri</th>
+<th>Nomor Line</th>
+        <th>Time Result</th>
+        <th>Rank</th>
+        <th>Seri</th>
        
     </tr>
     </thead>
@@ -46,15 +60,32 @@
     @foreach($starting_list as $row)
         <tr>
             <td>{{ $i++}}</td>
-            <td>{{ $row->race->race_number }}</td>
-            <td>{{ $row->member->name }}</td>
-            <td>{{ $row->member->gender }}</td>
-            <td>{{ $row->race->pureRaces->name }}</td>
-            <td>{{ date("Y", strtotime($row->member->born_date)) }}</td>
-            <td>{{ $row->member->clubs->name }}</td>
-            <td>{{ $row->member->clubs->city }}</td>
-            <td>{{ $row->member->clubs->province }}</td>
-            <td>{{ timeFormat( $row->old_best_time )}}</td>
+            <td>{{ $row->numbers }}</td>
+      <td>{{ $row->nama_klub }}</td>
+      <td>{{ $row->kota }}</td>
+      <td>{{ $row->provinsi }}</td>
+      <td>{{ $row->PIC }}</td>
+      <td>{{ $row->phone_number }}</td>
+      <td>{{ $row->nama_member }}</td>
+      <td>{{ $row->gender }}</td>
+      <td>{{ $row->tanggal_lahir }}</td>
+      <td>{{ $row->tahun_lahir }}</td>
+      <td>{{ $row->old_event_name }}</td>
+      <td>{{ $row->old_race_name }}</td>
+      <td>{{ $row->old_pure_race_name }}</td>
+      <td>{{ $row->cur_event_name }}</td>
+      <td>{{ $row->cur_event_start_date }}</td>
+      <td>{{ $row->cur_event_end_date }}</td>
+      <td>{{ $row->cur_race_name }}</td>
+      <td>{{ $row->cur_pure_race_name }}</td>
+      <td>{{ $row->seri }}</td>
+      <td>{{ $row->line_number }}</td>
+      <td>{{ timeFormat($row->time_result) }}</td>
+      <td>{{ $row->rank_result }}</td>
+      <td>{{ $row->payment_status }}</td>
+
+
+
 
 
         </tr>

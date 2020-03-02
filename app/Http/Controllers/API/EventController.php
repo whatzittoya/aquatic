@@ -28,6 +28,13 @@ class EventController extends Controller
         return response()->json($events);
     }
 
+    public function showCurrentEvent()
+    {
+        $events = Event::whereRaw('curdate() < DATE_ADD(`end_date` , INTERVAL 14 day)')->get();
+
+        return response()->json($events);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

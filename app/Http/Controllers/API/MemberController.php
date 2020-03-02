@@ -49,7 +49,7 @@ class MemberController extends Controller
         // $user->save();
 
         $rules = array(
-            'file'       => 'required|max:500|mimes:pdf,png,jpg,jpeg',
+            'file'       => 'required|max:1000|mimes:pdf,png,jpg,jpeg',
 
         );
 

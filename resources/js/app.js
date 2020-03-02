@@ -89,7 +89,7 @@ const routes = [
     },
     {
         name: 'manage LiveMatch',
-        path: '/admin/home/:id',
+        path: '/admin/home/:id?',
         component: LiveMatch,
     },
     {
@@ -101,7 +101,12 @@ const routes = [
         name: 'manage Payment',
         path: '/admin/payments',
         component: Payment,
-    }
+    },
+    {
+        name: 'manage LiveMatch',
+        path: '/match',
+        component: LiveMatch,
+    },
 
 
 ]

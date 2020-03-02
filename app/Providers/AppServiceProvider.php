@@ -34,60 +34,66 @@ class AppServiceProvider extends ServiceProvider
                 [
                     'text'        => 'Home - Live Result',
                     'url'       => 'admin/home/all',
-                    'icon'        => 'far fa-fw fa-file',
+                    'icon'        => 'fas fa-home',
                     'can'  => 'manage-member',
 
                 ],
                 [
                     'text'        => 'Member',
                     'route'       => 'members',
-                    'icon'        => 'far fa-fw fa-file',
+                    'icon'        => 'fas fa-users',
                     'can'  => 'manage-member',
 
                 ],
                 [
                     'text'        => 'Klub',
                     'route'       => 'clubs',
-                    'icon'        => 'far fa-fw fa-file',
+                    'icon'        => 'fas fa-building',
                     'can'  => 'admin',
 
                 ],
+                [
+                    'text'        => 'Lomba',
+                    'route'       => 'races',
+                    'icon'        => 'fas fa-swimmer',
+                    'can'  => 'admin',
 
+                ],
                 [
                     'text'        => 'Rule',
                     'route'       => 'rules',
-                    'icon'        => 'far fa-fw fa-file',
+                    'icon'        => 'fas fa-sort-numeric-up',
                     'can'  => 'admin',
 
                 ],
 
                 [
                     'text' => 'Event',
-                    'icon' => 'far fa-fw fa-file',
+                    'icon' => 'fas fa-calendar-alt',
 
                     'submenu' => [
                         [
                             'text' => 'Daftar Event',
                             'route'  => 'events',
-                            'icon' => 'user',
+                            'icon' => 'fas fa-calendar-plus',
                             'can'  => 'admin',
                         ],
                         [
                             'text' => 'Lomba Event',
                             'url'  => 'admin/event/races/all',
-                            'icon' => 'user',
+                            'icon' => 'fas fa-water',
                             'can'  => 'admin',
                         ],
                         [
                             'text' => 'Peserta',
                             'url'  => 'admin/event/participants/all',
-                            'icon' => 'user',
+                            'icon' => 'fas fa-address-card',
                             'can'  => 'manage-member',
                         ],
                         [
                             'text' => 'Hasil Pertandingan',
                             'url'  => 'admin/event/matches/all',
-                            'icon' => 'user',
+                            'icon' => 'fas fa-list-ol',
                             'can'  => 'admin',
                         ]
 
@@ -97,13 +103,13 @@ class AppServiceProvider extends ServiceProvider
                 [
                     'text' => 'Starting List',
                     'route'       => 'starting_list',
-                    'icon' => 'far fa-fw fa-file',
-                    'can'  => 'admin',
+                    'icon' => 'fas fa-clipboard-list',
+                    'can'  => 'manage-member',
                 ],
                 [
                     'text' => 'Pembayaran',
                     'route'       => 'payment',
-                    'icon' => 'far fa-fw fa-file',
+                    'icon' => 'fas fa-money-bill-wave',
                     'can'  => 'manage-member',
                 ],
                 'ACCOUNT SETTINGS',
@@ -116,7 +122,7 @@ class AppServiceProvider extends ServiceProvider
                 [
                     'text' => 'Profil Klub',
                     'route' => 'profile',
-                    'icon' => 'fas fa-fw fa-user',
+                    'icon' => 'fas fa-cog',
                     'can'  => 'club'
                 ]
 

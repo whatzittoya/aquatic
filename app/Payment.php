@@ -11,11 +11,11 @@ class Payment extends Model
 
     public function clubs()
     {
-        return $this->belongsTo('App\Club', 'club_id');
+        return $this->belongsTo('App\Club', 'club_id')->withTrashed();
     }
 
     public function events()
     {
-        return $this->belongsTo('App\Event', 'event_id');
+        return $this->belongsTo('App\Event', 'event_id')->withTrashed();
     }
 }

@@ -13,7 +13,7 @@
                     <a class="nav-link" href="{{ url('about')}}">Tentang Kami</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('events')}}">Events</a>
+                    <a class="nav-link" href="{{ route('match_result')}}">Hasil Pertandingan</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('contact')}}">Kontak</a>

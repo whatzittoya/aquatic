@@ -17,7 +17,7 @@
                             <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details>
                             </v-text-field>
  <v-spacer></v-spacer>
-                         <v-btn color="success" dark class="mb-2" :href="'/admin/startinglist/export_excel/'+id" target="_blank">Export Excel</v-btn>
+                         <v-btn color="success" dark class="mb-2" :href="'/admin/startinglist/export_excel/'+id" target="_blank" v-if="role=='admin'">Export Excel</v-btn>
                         </v-toolbar>
                     </template>
                 <template v-slot:item.number="{ item }">
@@ -47,6 +47,7 @@ export default {
       events: [],
       event: "",
       id: "",
+      role: "",
       headers: [
         { text: "No", value: "number" },
         { text: "Nomor Lomba", value: "race.race_number" },
@@ -68,6 +69,11 @@ export default {
 
   methods: {
     loadData() {
+      axios.get("/api/role").then(response => {
+        // mengirim data hasil fetch ke varibale array persons
+        this.role = response.data.name;
+        // console.log(response.data);
+      });
       axios.get("/api/events").then(response => {
         this.events = response.data;
       });

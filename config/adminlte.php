@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'Aquatic',
+    'title' => 'Riau Aquatic',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -30,8 +30,8 @@ return [
     |
     */
 
-    'logo' => '<b>Aquatic</b>Riau',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo' => 'Riau<b>Aquatic</b>',
+    'logo_img' => asset('img/logo-sm.png'),
     'logo_img_class' => 'brand-image-xl',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',

@@ -158,7 +158,7 @@ export default {
         { text: "Seri", value: "series" },
         { text: "Kategori", value: "rule.name" },
         { text: "Line Number", value: "line_number" },
-        { text: "Best Time", value: "best_time" },
+        { text: "Time Result", value: "best_time" },
         { text: "Aksi", value: "action", sortable: false }
       ],
       event: [],
@@ -185,7 +185,7 @@ export default {
   methods: {
     loadData() {
       // fetch data dari api menggunakan axios
-      axios.get("/api/events/showlock").then(response => {
+      axios.get("/api/events/showcurrent").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.events = response.data;
         // console.log(response.data);

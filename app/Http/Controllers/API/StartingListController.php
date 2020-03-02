@@ -6,6 +6,7 @@ use App\Event;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Participant;
+use Illuminate\Support\Facades\Auth;
 
 class StartingListController extends Controller
 {
@@ -38,8 +39,15 @@ class StartingListController extends Controller
      */
     public function show($id)
     {
-        $startinglist = Participant::where('event_id', $id)->join('members', 'members.id', '=', 'participants.member_id')
-            ->with('member:id,name,born_date,club_id,gender', 'member.clubs:id,name,city,province', 'race:id,pure_race_id,race_number', 'race.pureRaces:id,name')->select('participants.id', 'member_id', 'race_id', 'old_best_time', 'members.name')->orderBy('members.name')->get();
+        if (Auth::user()->isAdmin()) {
+            $startinglist = Participant::where('event_id', $id)->join('clubs', 'clubs.id', '=', 'participants.club_id')
+                ->with('member:id,name,born_date,club_id,gender', 'member.clubs:id,name,city,province', 'race:id,pure_race_id,race_number', 'race.pureRaces:id,name')->select('participants.id', 'member_id', 'race_id', 'old_best_time')->orderBy('clubs.name')->get();
+        } else {
+            $startinglist = Participant::where('event_id', $id)->join('clubs', 'clubs.id', '=', 'participants.club_id')
+                ->with('member:id,name,born_date,club_id,gender', 'member.clubs:id,name,city,province', 'race:id,pure_race_id,race_number', 'race.pureRaces:id,name')->whereHas('member.clubs', function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                })->select('participants.id', 'member_id', 'race_id', 'old_best_time')->orderBy('clubs.name')->get();
+        }
         return response()->json($startinglist);
     }
 

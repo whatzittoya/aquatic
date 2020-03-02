@@ -14,6 +14,6 @@ class Member extends Model
     // protected $fillable = ['name', 'best_time', 'born_date', 'club_id', 'valid'];
     public function clubs()
     {
-        return $this->belongsTo('App\Club', 'club_id');
+        return $this->belongsTo('App\Club', 'club_id')->withTrashed();
     }
 }
