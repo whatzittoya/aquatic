@@ -110,6 +110,7 @@ const routes = [
 
 
 ]
+// axios.defaults.baseURL = 'https://aquatic.rcs.my.id/';
 
 const router = new VueRouter({ mode: 'history', routes: routes });
 new Vue({
@@ -118,4 +119,4 @@ new Vue({
     vuetify: new Vuetify(),
     components: { App },
     template: '<App/>'
-})
+})  

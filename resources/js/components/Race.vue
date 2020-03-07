@@ -89,11 +89,18 @@
  <!-- <v-select v-model="a.currentItem" :items="items"></v-select> -->
             </div>
         </div>
+          <loading :active.sync="isLoading" 
+        :can-cancel="false" 
+   
+        :is-full-page="fullPage"></loading>
     </div>
 </template>
 
 <!-- script js -->
 <script>
+import Loading from "vue-loading-overlay";
+// Import stylesheet
+import "vue-loading-overlay/dist/vue-loading.css";
 export default {
   computed: {
     formTitle() {
@@ -134,6 +141,8 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
+      fullPage: true,
       ruleselected: {},
 
       races_form: {
@@ -228,6 +237,7 @@ export default {
       if (!this.formHasErrors && this.file_error_messages == null) {
         // post data ke api menggunakan axios
         if (this.edit && this.form.id > 0) {
+          this.isLoading = true;
           axios
             .post("/api/races/" + this.form.id, {
               data: this.form,
@@ -237,23 +247,28 @@ export default {
             .then(response => {
               // push router ke read data
               this.loadData();
+              this.isLoading = false;
               this.close();
             })
             .catch(errors => {
+              this.isLoading = false;
               this.formerrors.race_number =
                 errors.response.data.errors.race_number;
               this.formerrors.name = errors.response.data.errors.name;
             });
         } else {
+          this.isLoading = true;
           axios
             .post("/api/races", this.form)
             .then(response => {
               // push router ke read data
 
               this.loadData();
+              this.isLoading = false;
               this.close();
             })
             .catch(errors => {
+              this.isLoading = false;
               this.formerrors.race_number =
                 errors.response.data.errors.race_number;
               this.formerrors.name = errors.response.data.errors.name;

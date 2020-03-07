@@ -32,6 +32,7 @@ class EventParticipantController extends Controller
      */
     public function store(Request $request)
     {
+
         $participant = new Participant;
         $participant->old_event = $request->old_event;
         $participant->old_race = $request->old_race;
@@ -59,12 +60,20 @@ class EventParticipantController extends Controller
     {
 
         if (Auth::user()->isAdmin()) {
-            $participant = Participant::with('member:id,name,gender,born_date', 'club:id,name', 'club.members', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'race.rules', 'rule:id,name')->where('event_id', $id)->get();
+            $participant = Participant::leftJoin('payments', function ($join) use ($id) {
+                $join->on('payments.club_id', '=', 'participants.club_id');
+                $join->on('payments.event_id', '=', 'participants.event_id');
+            })->with('member:id,name,gender,born_date', 'club:id,name', 'club.members', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'race.rules', 'rule:id,name')->where('participants.event_id', $id)->select('payments.event_id', 'payments.club_id', 'payments.verified as valid_payment', 'participants.*')->get();
         } else {
-            $participant = Participant::with('member:id,name,gender,born_date', 'club:id,name',  'club.members', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'race.rules', 'rule:id,name')->whereHas('club', function ($query) {
+            $participant = Participant::leftJoin('payments', function ($join) use ($id) {
+                $join->on('payments.club_id', '=', 'participants.club_id');
+                $join->on('payments.event_id', '=', 'participants.event_id');
+            })->with('member:id,name,gender,born_date', 'club:id,name',  'club.members', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'race.rules', 'rule:id,name')->whereHas('club', function ($query) {
                 $query->where('user_id', Auth::user()->id);
-            })->where('event_id', $id)->get();
+            })->where('participants.event_id', $id)->select('participants.*', 'payments.event_id', 'payments.club_id', 'payments.verified as valid_payment')->get();
         }
+
+
 
         return response()->json($participant);
     }
@@ -91,8 +100,9 @@ class EventParticipantController extends Controller
         $member = Member::find($member_id);
         $bday = new DateTime($member->born_date); // Your date of birth
         $today = new DateTime(date('m.d.y'));
-        $diff = $today->diff($bday);
-        $age = $diff->y;
+        // $diff = $today->diff($bday);
+        // $age = $diff->y;
+        $age = $today->format('Y') - $bday->format('Y');
         $race = EventRace::with('pureRaces:name,id', 'rules:rules.id,name,min_age,max_age')->where('event_id', $id)->where('gender', $member->gender)->whereHas('rules', function ($query) use ($age) {
             $query->where('min_age', '<=', $age);
             $query->where('max_age', '>=', $age);
@@ -127,7 +137,6 @@ class EventParticipantController extends Controller
         $participant = Participant::find($id);
         $participant->old_event = $data['old_event'];
         $participant->old_race = $data['old_race'];
-        $participant->old_best_time = $data['o_best_time'];
         // $participant->join_date = date("Y-m-d");
 
         $participant->club_id = $data['club']['id'];

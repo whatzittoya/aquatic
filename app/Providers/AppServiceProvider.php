@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
                 'MENU',
                 [
                     'text'        => 'Home - Live Result',
-                    'url'       => 'admin/home/all',
+                    'url'       => 'admin/home',
                     'icon'        => 'fas fa-home',
                     'can'  => 'manage-member',
 

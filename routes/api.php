@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Auth;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+Route::get('events/showcurrent', 'API\EventController@showCurrentEvent');
+Route::apiResource('liveresult', 'API\LiveResultController');
 Route::middleware('auth:api')->group(function () {
 
     Route::post('members/updateapi/{id}', 'API\MemberController@updateApi')->name('events');
@@ -27,7 +28,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('clubs', 'API\ClubController');
 
     Route::get('events/generatematch/{event_id}', 'API\EventController@generateMatch');
-    Route::get('events/showcurrent', 'API\EventController@showCurrentEvent');
+
     Route::get('events/showlock', 'API\EventController@showLock');
     Route::apiResource('events', 'API\EventController');
 
@@ -58,7 +59,6 @@ Route::middleware('auth:api')->group(function () {
     });
 });
 
-Route::apiResource('liveresult', 'API\LiveResultController');
 
 
 

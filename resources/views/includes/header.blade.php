@@ -18,8 +18,23 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('contact')}}">Kontak</a>
                 </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="{{ url('guide')}}" target="_blank">Panduan Website</a>
+                </li>
             </ul>
             <ul class="navbar-nav ml-auto">
+                 <li class="nav-item">
+                    <a class="nav-link" href="https://web.facebook.com/RiauAquaticPekanbaru/" target="_blank"><i class="fab fa-facebook pr-1  fa-2x"></i></a>
+                   
+                </li>
+               <li class="nav-item ">
+ <a class="nav-link" href="https://www.instagram.com/riauaquatic/" target="_blank"><i class="fab fa-instagram pr-1 fa-2x"></i></a>
+                  
+               </li>
+
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://www.youtube.com/channel/UC7FMuwrTSHELgjl8RNfg9Cw" target="_blank"><i class="fab fa-youtube pr-1 fa-2x"></i></a>  
+                </li>
                 @guest
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('login')}}">Login</a>

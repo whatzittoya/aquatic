@@ -22,6 +22,7 @@ body {
     height: 30px;
     line-height: 30px;
 }
+
       </style>
 </head>
 <body >
@@ -35,7 +36,7 @@ body {
 
 </main>  
        @include('includes.footer')
-   @include('includes.script')
+   @include('includes.vue')
 @yield('js')
 
 </body>

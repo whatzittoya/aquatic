@@ -267,7 +267,7 @@ export default {
         } else {
           this.isLoading = true;
           axios
-            .post("/api/events/races/", this.form)
+            .post("/api/events/races", this.form)
             .then(response => {
               // push router ke read data
 

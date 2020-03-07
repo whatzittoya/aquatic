@@ -102,13 +102,14 @@
 
         
           <template v-slot:item.action="{ item }">
+           <div v-if="item.valid==0 || role == 'admin'">
             <v-icon small class="mr-2" @click="editData(item)">
               edit
             </v-icon>
             <v-icon small @click="deleteData(item.id)">
               delete
             </v-icon>
-
+           </div>
             <a :href="'/admin/members/'+item.id"  target="_blank">
        <v-icon small>
         insert_drive_file
@@ -171,8 +172,8 @@ export default {
       defaultForm: {},
       clubs: [],
       validation: [
-        { text: "Tidak Valid", value: 0 },
-        { text: "Valid", value: 1 }
+        { text: "Tidak Valid", value: "0" },
+        { text: "Valid", value: "1" }
       ],
       genderList: [
         { text: "PA", value: "PA" },

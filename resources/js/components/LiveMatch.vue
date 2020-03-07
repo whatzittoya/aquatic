@@ -8,13 +8,22 @@
                     Hasil Pertandingan
                     <v-spacer></v-spacer>
                 </v-card-title>
-
+      
                      <v-select v-model="event" :items="events"
                      item-text="name" item-value="id" label="Pilih Event" return-object=""></v-select>
-                     <h3>{{matches.name}}</h3>
+     <h3>   
+<img src="/img/logo-sm.png" width="70px"></img>
+  <span style="text-align:center">                  
+{{matches.name}}</span></h3>
+                   
+                    
+                       <v-divider></v-divider>
+
                      <div v-for="match in matches.races">
                        <div v-if="match.participants_result.length>0">
+                           <v-container class="grey lighten-3">
                           <v-row no-gutters >
+                          
                             <v-col cols="6" xs="6" sm="6" md="2" >
                              <p class="font-weight-regular">No Lomba</p>
                          </v-col>
@@ -36,16 +45,21 @@
                             <v-col cols="6" xs="6"  sm="6" md="4">
                              <p class="font-weight-bold">{{match.gender}}</p>
                          </v-col>
-                              <div v-for="rule in match.rules">
+                          </v-row>
+                           </v-container>
+                        <v-row no-gutters>
+                              <div v-for="rule in match.rules" style="width:100%">
+                            
                                  <div v-if="countParticipantRule(match.participants_result,rule.id)>0">
-                                  <h5>Kategori {{rule.name}}</h5>
-                       <v-data-table :headers="headers" :items="filterRule(match.participants_result,rule.id)" class="elevation-1" :search="search">
+                                  <h5 style="margin-top:10px">Kategori {{rule.name}}</h5>
+                       <v-data-table :headers="headers" :items="filterRule(match.participants_result,rule.id)" class="elevation-1" :search="search" >
         <template v-slot:item.best_time="{ item }">
             {{ timeFormat(item.best_time) }}
           </template>
   
                        </v-data-table>
                                  </div>
+                             
                               </div>
                        </v-row>
                        <v-divider></v-divider>
@@ -96,6 +110,7 @@ export default {
         +time[1] * 60 * 1000 +
         +second[0] * 1000 +
         ms * 1;
+      return milisecond;
     }
   },
   data() {

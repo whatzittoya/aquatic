@@ -17,6 +17,7 @@ return [
     'title' => 'Riau Aquatic',
     'title_prefix' => '',
     'title_postfix' => '',
+    ['use_ico_only' => true, 'use_full_favicon' => false],
 
     /*
     |--------------------------------------------------------------------------
@@ -31,7 +32,7 @@ return [
     */
 
     'logo' => 'Riau<b>Aquatic</b>',
-    'logo_img' => asset('img/logo-sm.png'),
+    'logo_img' => 'img/logo-sm.png',
     'logo_img_class' => 'brand-image-xl',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',

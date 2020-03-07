@@ -15,6 +15,18 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
+Route::get('/guide', function () {
+    $data = file_get_contents(asset("guide.pdf"));
+    return response()->make($data, 200, [
+        'Content-Type'        => 'application/pdf',
+        'Content-Disposition' => 'inline; filename="guide.pdf"'
+    ]);
+})->name('contact');
+
 Route::get('/test', function () {
     return view('test');
 })->where('any', '.*');

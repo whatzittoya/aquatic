@@ -59,7 +59,6 @@
         <?php $i=1; ?>
     @foreach($starting_list as $row)
         <tr>
-            <td>{{ $i++}}</td>
             <td>{{ $row->numbers }}</td>
       <td>{{ $row->nama_klub }}</td>
       <td>{{ $row->kota }}</td>

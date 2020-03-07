@@ -59,18 +59,18 @@
                                                         </v-text-field>
                                                     </v-col>    
                                                     <v-col cols="12" sm="12" md="6">
-                                                        <v-text-field v-model="form.old_event" label="Event Terakhir"
+                                                        <v-text-field v-model="form.old_event" label="Event Terakhir" :disabled="role != 'admin'"
                                                             >
                                                         </v-text-field>
                                                     </v-col>
                                                     <v-col cols="12" sm="12" md="6">
                                                         <v-text-field v-model="form.old_race"
-                                                            label="Lomba Terakhir" >
+                                                            label="Lomba Terakhir" :disabled="role != 'admin'">
                                                         </v-text-field>
                                                     </v-col>
                                                       <v-col cols="12" sm="12" md="6">
                                                         <v-text-field v-model="form.old_best_time"
-                                                            label="Best Time Terakhir" type="time"  step="0.001" >
+                                                            label="Best Time Terakhir" type="time"  step="0.001" :disabled="role != 'admin'">
                                                         </v-text-field>
                                                     </v-col>
                                                       <v-col cols="12" sm="12" md="6">
@@ -121,6 +121,9 @@
           <template v-slot:item.valid_payment="{ item }">
               {{item.valid_payment==1?'Valid':'Tidak Valid'}}
           </template>
+           <template v-slot:item.old_best_time="{ item }">
+            {{ timeFormat(item.old_best_time) }}
+          </template>
                     <template v-slot:item.action="{ item }" v-if="!locked">
                         <v-icon small class="mr-2" @click="editData(item)">
                             edit
@@ -164,11 +167,11 @@ export default {
     age() {
       var today = new Date();
       var birthDate = new Date(this.born_date);
-      var m = today.getMonth() - birthDate.getMonth();
+      // var m = today.getMonth() - birthDate.getMonth();
       var age = today.getFullYear() - birthDate.getFullYear();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age = age - 1;
-      }
+      // if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      //   age = age - 1;
+      // }
       return age;
     },
     timeToInt: function() {
@@ -191,6 +194,7 @@ export default {
         +time[1] * 60 * 1000 +
         +second[0] * 1000 +
         ms * 1;
+      return milisecond;
     },
     locked() {
       var id = this.event;
@@ -219,7 +223,7 @@ export default {
         { text: "Gender", value: "member.gender" },
         { text: "Lomba", value: "race.pure_races.name" },
         { text: "Kategori", value: "rule.name" },
-        { text: "Best Time", value: "best_time" },
+        { text: "Best Time", value: "old_best_time" },
         { text: "Pembayaran", value: "valid_payment" },
         { text: "Aksi", value: "action", sortable: false }
       ],
@@ -325,6 +329,7 @@ export default {
       this.form.old_event = item.old_event;
       this.form.old_race = item.old_race;
       this.form.old_best_time = this.timeFormat(item.old_best_time);
+
       this.form.race = item.race;
       this.form.valid_payment = item.valid_payment;
 
@@ -340,6 +345,7 @@ export default {
       this.formHasErrors = false;
       this.form.event_id = this.id;
       this.form.o_best_time = this.timeToInt;
+
       //   Object.keys(this.formtest).forEach(f => {
       //     if (!this.formtest[f]) this.formHasErrors = true;
 
@@ -364,7 +370,7 @@ export default {
         } else {
           this.isLoading = true;
           axios
-            .post("/api/events/participants/", this.form)
+            .post("/api/events/participants", this.form)
             .then(response => {
               // push router ke read data
 
@@ -378,6 +384,7 @@ export default {
     },
     close() {
       this.disablewatch = false;
+
       this.dialog = false;
       setTimeout(() => {
         this.form = this.defaultForm;
@@ -466,26 +473,26 @@ export default {
         });
         this.form.rule = rule[0].name;
         this.form.rule_id = rule[0].id;
-
-        axios
-          .get(
-            "/api/events/participants/lastrecord/" +
-              this.form.member.id +
-              "/" +
-              this.form.race.pure_race_id
-          )
-          .then(response => {
-            let res = response.data;
-            if (res.length > 0) {
-              this.form.old_event = res[0].old_event;
-              this.form.old_race = res[0].old_race;
-              this.form.old_best_time = this.timeFormat(res[0].old_best_time);
-            } else {
-              this.form.old_event = "";
-              this.form.old_race = "";
-              this.form.old_best_time = "00:59:59.999";
-            }
-          });
+        if (this.edit == false) {
+          axios
+            .get(
+              "/api/events/participants/lastrecord/" +
+                this.form.member.id +
+                "/" +
+                this.form.race.pure_race_id
+            )
+            .then(response => {
+              let res = response.data;
+              if (res.length > 0) {
+                this.form.old_event = res[0].old_event;
+                this.form.old_race = res[0].old_race;
+              } else {
+                this.form.old_event = "";
+                this.form.old_race = "";
+                this.form.old_best_time = "00:59:59.999";
+              }
+            });
+        }
       } catch (error) {}
     },
     event(val) {

@@ -187,8 +187,8 @@ export default {
       defaultForm: {},
       clubs: [],
       verified: [
-        { text: "Belum diverifikasi", value: 0 },
-        { text: "Sudah diverifikasi", value: 1 }
+        { text: "Belum diverifikasi", value: "0" },
+        { text: "Sudah diverifikasi", value: "1" }
       ],
 
       events: [],
