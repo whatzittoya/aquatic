@@ -195,7 +195,6 @@ export default {
       axios.get("/api/events/showcurrent").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.events = response.data;
-        // console.log(response.data);
       });
       if (this.id > 0) {
         axios.get("/api/events/matches/" + this.id).then(response => {
@@ -238,7 +237,6 @@ export default {
       });
 
       if (!this.formHasErrors) {
-        console.log(123);
         // post data ke api menggunakan axios
         if (this.edit && this.form.id > 0) {
           this.isLoading = true;

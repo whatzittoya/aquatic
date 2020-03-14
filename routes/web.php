@@ -74,7 +74,8 @@ Route::middleware('auth')->prefix('admin')->group(function () {
         return view('admin.startingList');
     })->name('starting_list');
 
-    Route::get('/startinglist/export_excel/{id}', 'StartingListController@export_excel');
+    Route::get('/startinglist/export_excel_slist/{id}', 'StartingListController@export_excel_slist');
+    Route::get('/startinglist/export_excel_match/{id}', 'StartingListController@export_excel_match');
 
 
     Route::resource('payments', 'PaymentController')->names([

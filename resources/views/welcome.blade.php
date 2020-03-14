@@ -28,7 +28,7 @@
             <img class="d-block img-fluid c-item " src="{{asset('img/1.jpeg')}}" alt="First slide">
             <div class="carousel-caption d-none d-md-block" style="background-color: rgba(108, 117, 125, 0.4);">
                 <h3>Selamat Datang di Website Riau Aquatic</h3>
-                <p class="lead">Bagi peserta yang ingan mendaftar silahkan klik link di bawah ini.</p>
+                <p class="lead">Bagi peserta yang ingin mendaftar silahkan klik link di bawah ini.</p>
                 <p class="lead">
                     <a class="btn btn-primary btn-lg" href="{{route('register')}}" role="button">Daftar</a>
                 </p>
@@ -39,7 +39,7 @@
             <img class="d-block img-fluid c-item " src="{{asset('img/2.jpeg')}}" alt="Second slide">
             <div class="carousel-caption d-none d-md-block" style="background-color: rgba(108, 117, 125, 0.4);">
                 <h3>Selamat Datang di Website Riau Aquatic</h3>
-                <p class="lead">Bagi peserta yang ingan mendaftar silahkan klik link di bawah ini.</p>
+                <p class="lead">Bagi peserta yang ingin mendaftar silahkan klik link di bawah ini.</p>
                 <p class="lead">
                     <a class="btn btn-primary btn-lg" href="{{route('register')}}" role="button">Daftar</a>
                 </p>
@@ -49,7 +49,7 @@
             <img class="d-block img-fluid c-item " src="{{asset('img/3.jpeg')}}" alt="Third slide">
             <div class="carousel-caption d-none d-md-block" style="background-color: rgba(108, 117, 125, 0.4);">
                 <h3>Selamat Datang di Website Riau Aquatic</h3>
-                <p class="lead">Bagi peserta yang ingan mendaftar silahkan klik link di bawah ini.</p>
+                <p class="lead">Bagi peserta yang ingin mendaftar silahkan klik link di bawah ini.</p>
                 <p class="lead">
                     <a class="btn btn-primary btn-lg" href="{{route('register')}}" role="button">Daftar</a>
                 </p>
@@ -59,7 +59,7 @@
             <img class="d-block img-fluid c-item " src="{{asset('img/4.jpeg')}}" alt="Fourth slide">
             <div class="carousel-caption d-none d-md-block" style="background-color: rgba(108, 117, 125, 0.4);">
                 <h3>Selamat Datang di Website Riau Aquatic</h3>
-                <p class="lead">Bagi peserta yang ingan mendaftar silahkan klik link di bawah ini.</p>
+                <p class="lead">Bagi peserta yang ingin mendaftar silahkan klik link di bawah ini.</p>
                 <p class="lead">
                     <a class="btn btn-primary btn-lg" href="{{route('register')}}" role="button">Daftar</a>
                 </p>
@@ -70,7 +70,7 @@
             <img class="d-block img-fluid c-item " src="{{asset('img/6.jpeg')}}" alt="Sixth slide">
             <div class="carousel-caption d-none d-md-block" style="background-color: rgba(108, 117, 125, 0.4);">
                 <h3>Selamat Datang di Website Riau Aquatic</h3>
-                <p class="lead">Bagi peserta yang ingan mendaftar silahkan klik link di bawah ini.</p>
+                <p class="lead">Bagi peserta yang ingin mendaftar silahkan klik link di bawah ini.</p>
                 <p class="lead">
                     <a class="btn btn-primary btn-lg" href="{{route('register')}}" role="button">Daftar</a>
                 </p>
@@ -92,7 +92,7 @@
         <div class="col-12 p-0">
             <div class="jumbotron text-center m-4 d-flex flex-column justify-content-center">
                 <h1 >Selamat Datang di Website Riau Aquatic</h1>
-                <p class="lead">Bagi peserta yang ingan mendaftar silahkan klik link di bawah ini.</p>
+                <p class="lead">Bagi peserta yang ingin mendaftar silahkan klik link di bawah ini.</p>
                 <p class="lead">
                     <a class="btn btn-primary btn-lg" href="{{route('register')}}" role="button">Daftar</a>
 </p>

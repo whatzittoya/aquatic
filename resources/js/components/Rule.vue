@@ -163,7 +163,6 @@ export default {
       axios.get("/api/rules").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.rules = response.data;
-        // console.log(response.data);
       });
       this.defaultForm = {
         name: "",

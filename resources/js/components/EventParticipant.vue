@@ -41,7 +41,7 @@
                                              <v-col cols="12" sm="12" md="6">
                                  <v-select v-model="form.member" :items="members"
                                                             item-text="name" item-value="id" label="Member"
-                                                           return-object="" ></v-select>
+                                                           return-object="" :disabled="edit" ></v-select>
                                                     </v-col>  
                                                     <v-col cols="12" sm="12" md="6">
                                  <v-select v-model="form.race" :items="races"
@@ -259,7 +259,9 @@ export default {
       dialog: false,
       formHasErrors: false,
       role: "",
-      ruletext: ""
+      ruletext: "",
+      findlasterecord: true,
+      resetraceselected: true
     };
   },
   created() {
@@ -272,7 +274,6 @@ export default {
       axios.get("/api/role").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.role = response.data.name;
-        // console.log(response.data);
       });
       this.defaultForm = {
         old_event: "",
@@ -334,6 +335,8 @@ export default {
       this.form.valid_payment = item.valid_payment;
 
       this.edit = true;
+      this.findlasterecord = false;
+      this.resetraceselected = false;
       this.dialog = true;
     },
     createData() {
@@ -387,7 +390,19 @@ export default {
 
       this.dialog = false;
       setTimeout(() => {
-        this.form = this.defaultForm;
+        this.defaultForm = {
+          old_event: "",
+          old_race: "",
+          old_best_time: "00:59:59.999",
+          club: "",
+          member: "",
+          race: "",
+          event: this.event_name,
+          rule: "",
+          best_time: "",
+          valid_payment: 0
+        };
+        this.form = Object.assign({}, this.defaultForm);
         this.edit = false;
       }, 300);
     },
@@ -458,12 +473,16 @@ export default {
             )
             .then(response => {
               this.races = response.data;
+              if (this.resetraceselected) {
+                this.form.race = this.races[0];
+              }
+
+              this.resetraceselected = true;
             });
         }
       }
     },
     "form.race"(val) {
-      console.log(val);
       try {
         var rules = val.rules;
         var age = this.age;
@@ -473,7 +492,8 @@ export default {
         });
         this.form.rule = rule[0].name;
         this.form.rule_id = rule[0].id;
-        if (this.edit == false) {
+
+        if (this.findlasterecord == true) {
           axios
             .get(
               "/api/events/participants/lastrecord/" +
@@ -492,6 +512,9 @@ export default {
                 this.form.old_best_time = "00:59:59.999";
               }
             });
+        }
+        if (this.edit == true) {
+          this.findlasterecord = true;
         }
       } catch (error) {}
     },

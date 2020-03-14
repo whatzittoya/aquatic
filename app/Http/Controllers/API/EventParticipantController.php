@@ -61,19 +61,16 @@ class EventParticipantController extends Controller
 
         if (Auth::user()->isAdmin()) {
             $participant = Participant::leftJoin('payments', function ($join) use ($id) {
-                $join->on('payments.club_id', '=', 'participants.club_id');
-                $join->on('payments.event_id', '=', 'participants.event_id');
-            })->with('member:id,name,gender,born_date', 'club:id,name', 'club.members', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'race.rules', 'rule:id,name')->where('participants.event_id', $id)->select('payments.event_id', 'payments.club_id', 'payments.verified as valid_payment', 'participants.*')->get();
+                $join->on('payments.id', DB::raw('(select max(p.id) from payments as p where p.event_id=participants.event_id and p.club_id=participants.club_id )'));
+            })->with('member:id,name,gender,born_date', 'club:id,name', 'club.members', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'race.rules', 'rule:id,name')->where('participants.event_id', $id)->select('participants.*', 'payments.verified as valid_payment')->get();
         } else {
             $participant = Participant::leftJoin('payments', function ($join) use ($id) {
                 $join->on('payments.club_id', '=', 'participants.club_id');
                 $join->on('payments.event_id', '=', 'participants.event_id');
             })->with('member:id,name,gender,born_date', 'club:id,name',  'club.members', 'race:id,pure_race_id', 'race.pureRaces:id,name', 'race.rules', 'rule:id,name')->whereHas('club', function ($query) {
                 $query->where('user_id', Auth::user()->id);
-            })->where('participants.event_id', $id)->select('participants.*', 'payments.event_id', 'payments.club_id', 'payments.verified as valid_payment')->get();
+            })->where('participants.event_id', $id)->select('participants.*', 'payments.verified as valid_payment')->get();
         }
-
-
 
         return response()->json($participant);
     }

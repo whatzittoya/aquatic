@@ -167,7 +167,6 @@ export default {
       axios.get("/api/participants").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.participants = response.data;
-        // console.log(response.data);
       });
       this.defaultForm = {
         name: "",
@@ -220,7 +219,6 @@ export default {
 
       Object.keys(this.formtest).forEach(f => {
         if (!this.formtest[f]) this.formHasErrors = true;
-        console.log(this.formtest[f]);
         this.$refs[f].validate(true);
       });
       if (!this.formHasErrors && this.file_error_messages == null) {

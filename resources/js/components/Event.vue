@@ -191,7 +191,6 @@ export default {
       axios.get("/api/events").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.events = response.data;
-        // console.log(response.data);
       });
       this.defaultForm = {
         name: "",
@@ -226,7 +225,6 @@ export default {
 
       Object.keys(this.formtest).forEach(f => {
         if (!this.formtest[f]) this.formHasErrors = true;
-        console.log(this.formtest[f]);
         this.$refs[f].validate(true);
       });
       if (!this.formHasErrors && this.file_error_messages == null) {
@@ -285,7 +283,6 @@ export default {
     },
     generateMatch(id) {
       axios.get("/api/events/generatematch/" + id, this.form).then(response => {
-        console.log(response.data);
         this.$router.push("/admin/event/matches/" + id);
       });
     }

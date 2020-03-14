@@ -79,7 +79,7 @@
                                                         </v-file-input>
                                                     </v-col>
                                                     <v-col cols="12" sm="12" md="6" v-if="role == 'admin'">
-                            <v-select :items="verified" label="Verifikasi" v-model="form.verified"></v-select>
+                            <v-select ref="verified" :items="verified" label="Verifikasi" v-model="form.verified" :rules="[rules_form.required_number]"></v-select>
                           </v-col>
                                                     <v-col cols="12" sm="12" md="6" v-else>
                                                         <b>Verifikasi :</b>
@@ -155,12 +155,22 @@ export default {
     },
 
     formtest() {
-      return {
-        bank_name: this.form.bank_name,
-        account_name: this.form.account_name,
-        account_number: this.form.account_number,
-        amount: this.form.amount
-      };
+      if (this.role == "admin") {
+        return {
+          bank_name: this.form.bank_name,
+          account_name: this.form.account_name,
+          account_number: this.form.account_number,
+          amount: this.form.amount,
+          verified: this.form.verified
+        };
+      } else {
+        return {
+          bank_name: this.form.bank_name,
+          account_name: this.form.account_name,
+          account_number: this.form.account_number,
+          amount: this.form.amount
+        };
+      }
     }
   },
 
@@ -169,7 +179,11 @@ export default {
       isLoading: false,
       fullPage: true,
       rules_form: {
-        required: value => !!value || "Required."
+        required: value => !!value || "Required.",
+        required_number: v => {
+          if (!isNaN(parseFloat(v)) && v >= 0) return true;
+          return "Required";
+        }
       },
       menu: false,
       file: null,
@@ -187,8 +201,8 @@ export default {
       defaultForm: {},
       clubs: [],
       verified: [
-        { text: "Belum diverifikasi", value: "0" },
-        { text: "Sudah diverifikasi", value: "1" }
+        { text: "Belum diverifikasi", value: 0 },
+        { text: "Sudah diverifikasi", value: 1 }
       ],
 
       events: [],
@@ -212,12 +226,10 @@ export default {
       axios.get("/api/role").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.role = response.data.name;
-        // console.log(response.data);
       });
       axios.get("/api/payments").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.payments = response.data;
-        // console.log(response.data);
       });
       axios.get("/api/events").then(response => {
         // mengirim data hasil fetch ke varibale array persons
@@ -269,10 +281,12 @@ export default {
       this.formHasErrors = false;
 
       Object.keys(this.formtest).forEach(f => {
-        if (!this.formtest[f]) this.formHasErrors = true;
+        if (!(this.formtest[f] || this.formtest[f] == 0))
+          this.formHasErrors = true;
 
         this.$refs[f].validate(true);
       });
+
       if (!this.formHasErrors && this.file_error_messages == null) {
         const config = {
           headers: { "content-type": "multipart/form-data" }
@@ -291,7 +305,7 @@ export default {
         formData.append("verified", this.form.verified);
         formData.append("pic_name", this.form.pic_name);
         //if the data for update
-        console.log("save)");
+
         if (this.edit && this.form.id > 0) {
           this.isLoading = true;
           axios
@@ -344,7 +358,6 @@ export default {
       val || this.close();
     },
     "form.file"(val) {
-      console.log(val);
       if (val != null) {
         this.form.pic_name = val.name;
         if (val.size > 1000000) {

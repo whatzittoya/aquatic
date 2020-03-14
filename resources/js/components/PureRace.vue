@@ -195,7 +195,6 @@ export default {
       this.form.rule = this.ruleselected.id;
 
       this.form.name = this.textname;
-      //   console.log(this.form);
       Object.keys(this.formtest).forEach(f => {
         if (!this.formtest[f]) this.formHasErrors = true;
         this.$refs[f].validate(true);

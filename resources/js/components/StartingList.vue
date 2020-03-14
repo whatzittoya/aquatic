@@ -17,7 +17,22 @@
                             <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details>
                             </v-text-field>
  <v-spacer></v-spacer>
-                         <v-btn color="success" dark class="mb-2" :href="'/admin/startinglist/export_excel/'+id" target="_blank" v-if="role=='admin'">Export Excel</v-btn>
+                        <v-menu offset-y v-if="role=='admin'">
+                            <template v-slot:activator="{ on }">
+                              <v-btn color="success" dark v-on="on" >
+                                Export
+                              </v-btn>
+                            </template>
+                            <v-list>
+                              <v-list-item :href="'/admin/startinglist/export_excel_slist/'+id" target="_blank">
+                                <v-list-item-title >Export Starting List</v-list-item-title>
+                              </v-list-item>
+                               <v-list-item :href="'/admin/startinglist/export_excel_match/'+id" target="_blank">
+                                <v-list-item-title>Export Pertandingan</v-list-item-title>
+                              </v-list-item>
+                            </v-list>
+                          </v-menu>
+                    
                         </v-toolbar>
                     </template>
                 <template v-slot:item.number="{ item }">
@@ -72,7 +87,6 @@ export default {
       axios.get("/api/role").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.role = response.data.name;
-        // console.log(response.data);
       });
       axios.get("/api/events").then(response => {
         this.events = response.data;
@@ -83,7 +97,6 @@ export default {
         axios.get("/api/startinglist/" + this.id).then(response => {
           // mengirim data hasil fetch ke varibale array persons
           this.starting_lists = response.data;
-          // console.log(response.data);
         });
       }
     },

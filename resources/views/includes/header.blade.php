@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+<nav class="navbar navbar-expand-xl navbar-dark bg-dark static-top">
     <div class="container">
         <img src="{{ asset('img/logo-sm.png') }}" width="80" style="padding-right: 15px;" />
         <a class="navbar-brand" href="{{ route('welcome')}}">Riau Aquatic</a>

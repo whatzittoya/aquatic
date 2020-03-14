@@ -14,7 +14,7 @@
                 </v-card-title>
         <v-data-table :headers="headers" :items="members" :items-per-page="10" class="elevation-1" :search="search">
           <template v-slot:item.valid="{ item }">
-            {{item.valid ? "Valid":"Tidak Valid"}}
+            {{item.valid=="1" ? "Valid":"Tidak Valid"}}
           </template>
           <template v-slot:top>
             <v-toolbar flat color="white">
@@ -65,11 +65,11 @@
                               :error-messages="file_error_messages" ></v-file-input>
                                </v-col>
 						<v-col cols="12" sm="12" md="6">
-                            <v-select :items="genderList" label="Gender" v-model="form.gender"></v-select>
+                            <v-select ref="gender" :items="genderList" label="Gender" v-model="form.gender" :rules="[rules.required]"></v-select>
                         </v-col>
 						  
                           <v-col cols="12" sm="12" md="6" v-if="role == 'admin'">
-                            <v-select :items="validation" label="Validasi" v-model="form.valid"></v-select>
+                            <v-select ref="valid" :items="validation" label="Validasi" v-model="form.valid" :rules="[rules.required_number]"></v-select>
                           </v-col>
                         <v-col cols="12" sm="12" md="6" v-else>
                           <b>Validasi :</b>
@@ -144,9 +144,18 @@ export default {
     },
 
     formtest() {
-      return {
-        name: this.form.name
-      };
+      if (this.role == "admin") {
+        return {
+          name: this.form.name,
+          gender: this.form.gender,
+          valid: this.form.valid
+        };
+      } else {
+        return {
+          name: this.form.name,
+          gender: this.form.gender
+        };
+      }
     }
   },
 
@@ -155,7 +164,11 @@ export default {
       isLoading: false,
       fullPage: true,
       rules: {
-        required: value => !!value || "Required."
+        required: value => !!value || "Required.",
+        required_number: v => {
+          if (!isNaN(parseFloat(v)) && v >= 0) return true;
+          return "Required";
+        }
       },
       date: new Date().toISOString().substr(0, 10),
       menu: false,
@@ -172,8 +185,8 @@ export default {
       defaultForm: {},
       clubs: [],
       validation: [
-        { text: "Tidak Valid", value: "0" },
-        { text: "Valid", value: "1" }
+        { text: "Tidak Valid", value: 0 },
+        { text: "Valid", value: 1 }
       ],
       genderList: [
         { text: "PA", value: "PA" },
@@ -200,12 +213,10 @@ export default {
       axios.get("/api/role").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.role = response.data.name;
-        // console.log(response.data);
       });
       axios.get("/api/members").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.members = response.data;
-        // console.log(response.data);
       });
       axios.get("/api/clubs").then(response => {
         // mengirim data hasil fetch ke varibale array persons
@@ -249,8 +260,9 @@ export default {
       this.formHasErrors = false;
 
       Object.keys(this.formtest).forEach(f => {
-        if (!this.formtest[f]) this.formHasErrors = true;
-
+        if (!(this.formtest[f] || this.formtest[f] == 0))
+          this.formHasErrors = true;
+        console.log(this.$refs[f]);
         this.$refs[f].validate(true);
       });
       if (!this.formHasErrors && this.file_error_messages == null) {
@@ -339,7 +351,6 @@ export default {
       val || this.close();
     },
     "form.file"(val) {
-      console.log(val);
       if (val != null) {
         this.form.filename = val.name;
         if (val.size > 1000000) {

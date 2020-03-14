@@ -99,7 +99,6 @@ export default {
       this.stat_form = "Edit";
       axios.get("/api/clubs/" + this.id).then(response => {
         // mengirim data hasil fetch ke varibale array persons
-        console.log(response.data);
         this.form = response.data;
       });
     } else {

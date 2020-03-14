@@ -217,7 +217,6 @@ export default {
       });
 
       if (!this.formHasErrors) {
-        console.log(123);
         // post data ke api menggunakan axios
         if (this.edit && this.form.id > 0) {
           this.isLoading = true;
@@ -241,7 +240,8 @@ export default {
         this.form = Object.assign({}, this.defaultForm);
         this.edit = false;
         Object.keys(this.formtest).forEach(f => {
-          if (!this.formtest[f]) this.formHasErrors = true;
+          if (!(this.formtest[f] || this.formtest[f] == 0))
+            this.formHasErrors = true;
           this.$refs[f].reset();
         });
       }, 300);

@@ -27,13 +27,15 @@ body {
 </head>
 <body >
 
-@include('includes.header')
-<main role="main" class="container content">
+
+<main role="main" >
+  @include('includes.header')
+  <div class="container content">
    <div class=" justify-content-center" >
    
            @yield('content')
  </div>
-
+  </div>
 </main>  
        @include('includes.footer')
    @include('includes.vue')

@@ -66,7 +66,7 @@
                             </v-text-field>
                           </v-col>
                           <v-col cols="12" sm="12" md="6">
-                            <v-select :items="validation" label="Validasi" v-model="form.valid"></v-select>
+                            <v-select ref="valid" :items="validation" label="Validasi" v-model="form.valid" :rules="[rules.required_number]"></v-select>
                           </v-col>
 
                         </v-row>
@@ -132,7 +132,8 @@ export default {
         province: this.form.province,
         email: this.form.email,
         pic: this.form.pic,
-        phone_number: this.form.phone_number
+        phone_number: this.form.phone_number,
+        valid: this.form.valid
       };
     }
   },
@@ -141,7 +142,11 @@ export default {
       isLoading: false,
       fullPage: true,
       rules: {
-        required: value => !!value || "Required."
+        required: value => !!value || "Required.",
+        required_number: v => {
+          if (!isNaN(parseFloat(v)) && v >= 0) return true;
+          return "Required";
+        }
       },
       emailRules: [
         v => !!v || "E-mail is required",
@@ -164,8 +169,8 @@ export default {
       form: {},
       defaultForm: {},
       validation: [
-        { text: "Tidak Valid", value: "0" },
-        { text: "Valid", value: "1" }
+        { text: "Tidak Valid", value: 0 },
+        { text: "Valid", value: 1 }
       ],
       edit: false,
       search: "",
@@ -188,7 +193,6 @@ export default {
       axios.get("/api/clubs").then(response => {
         // mengirim data hasil fetch ke varibale array persons
         this.clubs = response.data;
-        // console.log(response.data);
       });
       this.defaultForm = {
         name: "",
@@ -226,8 +230,8 @@ export default {
       this.formHasErrors = false;
 
       Object.keys(this.formtest).forEach(f => {
-        if (!this.formtest[f]) this.formHasErrors = true;
-        console.log(this.formtest[f]);
+        if (!(this.formtest[f] || this.formtest[f] == 0))
+          this.formHasErrors = true;
         this.$refs[f].validate(true);
       });
       if (!this.formHasErrors && this.file_error_messages == null) {
@@ -274,8 +278,8 @@ export default {
         this.form = Object.assign({}, this.defaultForm);
         this.edit = false;
         Object.keys(this.formtest).forEach(f => {
-          if (!this.formtest[f]) this.formHasErrors = true;
-          console.log(this.formtest[f]);
+          if (!(this.formtest[f] || this.formtest[f] == 0))
+            this.formHasErrors = true;
           this.$refs[f].reset();
         });
       }, 300);
