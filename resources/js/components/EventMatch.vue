@@ -12,11 +12,11 @@
                      <v-select v-model="event" :items="events"
                      item-text="name" item-value="id" label="Pilih Event" return-object=""></v-select>
                        <h3>   
-                  <img src="/img/logo-sm.png" width="70px"></img>
+                  <img src="/img/logo-sm.png" width="70px" />
                     <span style="text-align:center">                  
                   {{matches.name}}</span></h3>
                    <v-divider></v-divider>
-                     <div v-for="match in matches.races" >
+                     <div v-for="match in matches.races" :key="match.id" >
                        <div v-if="match.participants.length>0">
                           <v-container class="grey lighten-3">
                           <v-row no-gutters>
@@ -43,7 +43,7 @@
                          </v-col>
                             </v-row>
                           </v-container>
-                              <div v-for="serie in countSeries(match.participants)" style="width:100%; margin-top:10px" >
+                              <div v-for="serie in countSeries(match.participants)" :key="serie.id" style="width:100%; margin-top:10px" >
                                   <h5>Seri {{serie}}</h5>
                        <v-data-table :headers="headers" :items="filterSeries(match.participants,serie)" class="elevation-1" :search="search">
         <template v-slot:item.best_time="{ item }">
@@ -158,13 +158,13 @@ export default {
       menu_start: false,
       menu_end: false,
       headers: [
+        { text: "Line Number", value: "line_number" },
         { text: "Nama", value: "member.name" },
         { text: "Tanggal Lahir", value: "member.born_date" },
         { text: "Klub", value: "club.name" },
         { text: "Kota", value: "club.city" },
-        { text: "Seri", value: "series" },
         { text: "Kategori", value: "rule.name" },
-        { text: "Line Number", value: "line_number" },
+
         { text: "Time Result", value: "best_time" },
         { text: "Aksi", value: "action", sortable: false }
       ],
